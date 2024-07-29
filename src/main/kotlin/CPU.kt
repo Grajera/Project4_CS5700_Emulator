@@ -1,14 +1,20 @@
 package org.example
 
-class CPU {
+import Display
+import Instruction
+import Keyboard
+
+class CPU(
+    private val rom: ROM,
+    private val ram: RAM,
+    private val display: Display,
+    private val keyboard: Keyboard
+) {
     private val registers = ByteArray(8)
     private var programCounter = 0
     private var address = 0
     private var memoryFlag = 0
     private val timer = Timer()
-    private val ram = ByteArray(4096)
-    private val rom = ByteArray(4096)
-    private val display = Display()
 
     init {
         timer.start()
@@ -17,14 +23,14 @@ class CPU {
     fun run() {
         while (true) {
             fetch()
-            decode()
-            execute()
+            val instruction = decode()
+            execute(instruction)
             updateProgramCounter()
         }
     }
 
     fun pause() {
-        // Implementation to pause the CPU
+        timer.stop()
     }
 
     fun reset() {
@@ -35,51 +41,65 @@ class CPU {
         registers.fill(0)
     }
 
-    private fun fetch() {
-        // Fetch 2 bytes from ROM starting at PC
-        val instruction = (rom[programCounter].toInt() shl 8) or rom[programCounter + 1].toInt()
-        decode(instruction)
+    private fun fetch(): Int {
+        val instruction = (rom.read(programCounter).toInt() shl 8) or rom.read(programCounter + 1).toInt()
+        return instruction
     }
 
-    private fun decode(instruction: Int) {
-        // Decode instruction
+    private fun decode(): Instruction {
+        val instruction = fetch()
         val opcode = (instruction ushr 12) and 0xF
         val param1 = (instruction ushr 8) and 0xF
         val param2 = (instruction ushr 4) and 0xF
         val param3 = instruction and 0xF
 
-        when (opcode) {
-            0 -> store(param1, param2)   // STORE
-            1 -> add(param1, param2, param3)   // ADD
-            2 -> sub(param1, param2, param3)   // SUB
-            3 -> read(param1)   // READ
-            4 -> write(param1)   // WRITE
-            5 -> jump(param1)   // JUMP
-            6 -> readKeyboard(param1)   // READ_KEYBOARD
-            7 -> switchMemory()   // SWITCH_MEMORY
-            8 -> skipEqual(param1, param2)   // SKIP_EQUAL
-            9 -> skipNotEqual(param1, param2)   // SKIP_NOT_EQUAL
-            10 -> setA(param1)   // SET_A
-            11 -> setT(param1)   // SET_T
-            12 -> readT(param1)   // READ_T
-            13 -> convertToBase10(param1)   // CONVERT_TO_BASE_10
-            14 -> convertByteToASCII(param1, param2)   // CONVERT_BYTE_TO_ASCII
-            15 -> draw(param1, param2, param3)   // DRAW
+        return when (opcode) {
+            0 -> Instruction.Store(param1, param2)   // STORE
+            1 -> Instruction.Add(param1, param2, param3)   // ADD
+            2 -> Instruction.Sub(param1, param2, param3)   // SUB
+            3 -> Instruction.Read(param1)   // READ
+            4 -> Instruction.Write(param1)   // WRITE
+            5 -> Instruction.Jump(param1)   // JUMP
+            6 -> Instruction.ReadKeyboard(param1)   // READ_KEYBOARD
+            7 -> Instruction.SwitchMemory  // SWITCH_MEMORY
+            8 -> Instruction.SkipEqual(param1, param2)   // SKIP_EQUAL
+            9 -> Instruction.SkipNotEqual(param1, param2)   // SKIP_NOT_EQUAL
+            10 -> Instruction.SetA(param1)   // SET_A
+            11 -> Instruction.SetT(param1)   // SET_T
+            12 -> Instruction.ReadT(param1)   // READ_T
+            13 -> Instruction.ConvertToBase10(param1)   // CONVERT_TO_BASE_10
+            14 -> Instruction.ConvertByteToASCII(param1, param2)   // CONVERT_BYTE_TO_ASCII
+            15 -> Instruction.Draw(param1, param2, param3)   // DRAW
             else -> throw IllegalArgumentException("Invalid opcode: $opcode")
         }
     }
 
-    private fun execute() {
-        // Execution logic specific to the decoded instruction
+    private fun execute(instruction: Instruction) {
+        when (instruction) {
+            is Instruction.Store -> store(instruction.register, instruction.value)
+            is Instruction.Add -> add(instruction.rX, instruction.rY, instruction.rZ)
+            is Instruction.Sub -> sub(instruction.rX, instruction.rY, instruction.rZ)
+            is Instruction.Read -> read(instruction.rX)
+            is Instruction.Write -> write(instruction.rX)
+            is Instruction.Jump -> jump(instruction.address)
+            is Instruction.ReadKeyboard -> readKeyboard(instruction.rX)
+            is Instruction.SwitchMemory -> switchMemory()
+            is Instruction.SkipEqual -> skipEqual(instruction.rX, instruction.rY)
+            is Instruction.SkipNotEqual -> skipNotEqual(instruction.rX, instruction.rY)
+            is Instruction.SetA -> setA(instruction.value)
+            is Instruction.SetT -> setT(instruction.value)
+            is Instruction.ReadT -> readT(instruction.rX)
+            is Instruction.ConvertToBase10 -> convertToBase10(instruction.rX)
+            is Instruction.ConvertByteToASCII -> convertByteToASCII(instruction.rX, instruction.rY)
+            is Instruction.Draw -> draw(instruction.rX, instruction.rY, instruction.rZ)
+        }
     }
 
     private fun updateProgramCounter() {
         // Increment PC based on instruction type
-        // For simplicity, assume all instructions increment PC by 2
         programCounter += 2
     }
 
-    // Instructions implementation
     private fun store(register: Int, value: Int) {
         registers[register] = value.toByte()
     }
@@ -93,16 +113,15 @@ class CPU {
     }
 
     private fun read(rX: Int) {
-        val value = if (memoryFlag == 0) ram[address] else rom[address]
+        val value = if (memoryFlag == 0) ram.read(address) else rom.read(address)
         registers[rX] = value
     }
 
     private fun write(rX: Int) {
         if (memoryFlag == 0) {
-            ram[address] = registers[rX]
+            ram.write(address, registers[rX])
         } else {
             // Future support for writable ROM
-            // This is a placeholder for the future
         }
     }
 
