@@ -13,18 +13,17 @@ abstract class BasicInstruction(
 
     // Execute the instruction: process nibbles, perform operation, and update the program counter
     fun execute() {
-        processNibbles()
-        performOperation()
+        processNibblesForInstruction()
+        performInstruction()
         incrementProgramCounter()
     }
 
     // Increment the program counter by 2
     protected open fun incrementProgramCounter() {
-        val newPC = byteArrayToInt(p.read()) + 2
-        p.operate(intToByteArray(newPC))
+        p.operateOnRegister(intToByteArray(byteArrayToInt(p.readRegister()) + 2))
     }
 
     // Abstract methods to be implemented by subclasses
-    protected abstract fun processNibbles()
-    protected abstract fun performOperation()
+    protected abstract fun processNibblesForInstruction()
+    protected abstract fun performInstruction()
 }

@@ -10,15 +10,15 @@ class JumpInstruction(
     // Byte array to hold the calculated address
     lateinit var addressBytes: ByteArray
 
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         val address = (nibbles[0].toInt() shl 8) or (nibbles[1].toInt() shl 4) or nibbles[2].toInt()
         // Convert the address to a byte array
         addressBytes = intToByteArray(address)
     }
 
-    public override fun performOperation() {
+    public override fun performInstruction() {
         // Store the calculated address in the program counter
-        p.operate(addressBytes)
+        p.operateOnRegister(addressBytes)
     }
 
     public override fun incrementProgramCounter() {

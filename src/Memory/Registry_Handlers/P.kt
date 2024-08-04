@@ -11,7 +11,7 @@ object PRegisterManager {
 class P : Register(ByteArray(2)) {
 
     // Writes a byte array to the P register from the provided ByteArray
-    override fun write(bytes: ByteArray) {
+    override fun writeToRegister(bytes: ByteArray) {
         // Ensure the ByteArray is of the correct size
         require(bytes.size == 2) { "ByteArray must be of size 2." }
 

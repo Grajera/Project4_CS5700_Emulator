@@ -12,15 +12,15 @@ class AddInstruction(
     private lateinit var rz: R
 
     // Process the nibbles to initialize registers
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         rx = r[nibbles[0].toInt()]
         ry = r[nibbles[1].toInt()]
         rz = r[nibbles[2].toInt()]
     }
 
     // Perform the addition and store the result in the specified register
-    public override fun performOperation() {
-        val result = (rx.read()[0].toInt() + ry.read()[0].toInt()).toByte()
-        rz.operate(byteArrayOf(result))
+    public override fun performInstruction() {
+        val result = (rx.readRegister()[0].toInt() + ry.readRegister()[0].toInt()).toByte()
+        rz.operateOnRegister(byteArrayOf(result))
     }
 }

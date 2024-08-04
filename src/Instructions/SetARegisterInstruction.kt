@@ -11,7 +11,7 @@ class SetARegisterInstruction(
     private lateinit var addressBytes: ByteArray
 
     // Processes the nibbles to construct the address
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         val address = (nibbles[0].toInt() shl 8) or
                 (nibbles[1].toInt() shl 4) or
                 nibbles[2].toInt()
@@ -20,8 +20,8 @@ class SetARegisterInstruction(
     }
 
     // Performs the operation of setting the A register
-    public override fun performOperation() {
+    public override fun performInstruction() {
         // Set the A register with the calculated address
-        a.operate(addressBytes)
+        a.operateOnRegister(addressBytes)
     }
 }

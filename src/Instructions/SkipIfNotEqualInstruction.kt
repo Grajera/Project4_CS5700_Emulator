@@ -16,22 +16,22 @@ class SkipIfNotEqualInstruction(
     private lateinit var registerY: R
 
     // Processes the nibbles to identify the registers
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         registerX = r[nibbles[0].toInt()] // First operand register
         registerY = r[nibbles[1].toInt()] // Second operand register
     }
 
     // Determines if the next instruction should be skipped
-    public override fun performOperation() {
-        shouldSkipNextInstruction = registerX.read()[0].toInt() != registerY.read()[0].toInt()
+    public override fun performInstruction() {
+        shouldSkipNextInstruction = registerX.readRegister()[0].toInt() != registerY.readRegister()[0].toInt()
     }
 
     // Increments the program counter based on the skip flag
     public override fun incrementProgramCounter() {
-        p.read().let { currentPBytes ->
+        p.readRegister().let { currentPBytes ->
             val currentP = byteArrayToInt(currentPBytes)
             val offset = if (shouldSkipNextInstruction) 4 else 2
-            p.operate(intToByteArray(currentP + offset))
+            p.operateOnRegister(intToByteArray(currentP + offset))
         }
     }
 }

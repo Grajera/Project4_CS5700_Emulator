@@ -1,6 +1,6 @@
 package Instructions
 
-import com.emulator.PauseTimerManager
+import com.emulator.TimerManager
 import Memory.Registry_Handlers.R
 import Memory.Registry_Handlers.RRegisterManager.r
 
@@ -13,14 +13,14 @@ class ReadKeyboardInstruction(
     private lateinit var targetRegister: R
 
     // Processes the nibbles to identify the target register
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         val targetRegisterIndex = nibbles[0].toInt()
         targetRegister = r[targetRegisterIndex] // Retrieve the corresponding register
     }
 
     // Performs the operation of reading from the keyboard
-    public override fun performOperation() {
-        PauseTimerManager.pause.set(true) // Pause operations
+    public override fun performInstruction() {
+        TimerManager.pause.set(true) // Pause operations
 
         println("Enter up to 2 hexadecimal digits (0-F): ")
         // Read user input
@@ -38,9 +38,9 @@ class ReadKeyboardInstruction(
         }
 
         // Set the target register with the parsed byte
-        targetRegister.operate(byteArrayOf(byte))
+        targetRegister.operateOnRegister(byteArrayOf(byte))
         // Resume operations
-        PauseTimerManager.pause.set(false)
+        TimerManager.pause.set(false)
     }
 
     private fun parseHexInput(input: String): Byte {

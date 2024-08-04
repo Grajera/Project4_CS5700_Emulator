@@ -9,7 +9,7 @@ object MRegisterManager {
 class M : Register(ByteArray(1)) {
 
     // Writes a byte array to the M register from the provided ByteArray
-    override fun write(bytes: ByteArray) {
+    override fun writeToRegister(bytes: ByteArray) {
         // Ensure the ByteArray is of the correct size
         require(bytes.size == 1) { "ByteArray must be of size 1." }
 

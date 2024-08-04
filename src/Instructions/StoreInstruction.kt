@@ -11,7 +11,7 @@ class StoreInstruction (
     lateinit var rx: R
     var byte: Byte = 0
 
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         val rxIndex = nibbles[0].toInt()
         rx = r[rxIndex]
 
@@ -21,7 +21,7 @@ class StoreInstruction (
         byte = mergeNibblesToByte(highNibble, lowNibble)
     }
 
-    public override fun performOperation() {
-        rx.operate(byteArrayOf(byte))
+    public override fun performInstruction() {
+        rx.operateOnRegister(byteArrayOf(byte))
     }
 }

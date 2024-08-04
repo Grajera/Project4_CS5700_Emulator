@@ -8,16 +8,16 @@ abstract class Register(
 ) : Memory(bytes) {
 
     // Template method for writing data to the register
-    fun operate(bytes: ByteArray) {
-        write(bytes)  // Call the abstract write method, which must be implemented by subclasses
+    fun operateOnRegister(bytes: ByteArray) {
+        writeToRegister(bytes)  // Call the abstract write method, which must be implemented by subclasses
     }
 
     // Common read method to retrieve the contents of the register
-    fun read(): ByteArray {
+    fun readRegister(): ByteArray {
         // Return a copy of the byte array to prevent external modification
         return bytes.copyOf()
     }
 
     // Abstract method for writing data to the register, to be implemented by the subclasses
-    abstract fun write(bytes: ByteArray)
+    abstract fun writeToRegister(bytes: ByteArray)
 }

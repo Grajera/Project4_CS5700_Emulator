@@ -16,7 +16,7 @@ class SubtractInstruction(
     private lateinit var registerZ: R
 
     // Processes the nibbles to identify the registers
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         // First operand register
         registerX = r[nibbles[0].toInt()]
         // Second operand register
@@ -26,12 +26,12 @@ class SubtractInstruction(
     }
 
     // Performs the subtraction operation
-    public override fun performOperation() {
+    public override fun performInstruction() {
         // Read values from the registers
-        val valueX = registerX.read()[0].toInt()
-        val valueY = registerY.read()[0].toInt()
+        val valueX = registerX.readRegister()[0].toInt()
+        val valueY = registerY.readRegister()[0].toInt()
 
         // Store the result in the result register
-        registerZ.operate(byteArrayOf((valueX - valueY).toByte()))
+        registerZ.operateOnRegister(byteArrayOf((valueX - valueY).toByte()))
     }
 }

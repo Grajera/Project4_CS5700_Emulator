@@ -8,8 +8,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
-// Singleton to manage the pause state of the timer
-object PauseTimerManager {
+object TimerManager {
     val pause = AtomicBoolean(false)
 }
 
@@ -45,11 +44,11 @@ class CPU(
 
     // Runnable to manage timer updates
     private val timerRunnable = Runnable {
-        if (!PauseTimerManager.pause.get()) {
+        if (!TimerManager.pause.get()) {
             try {
-                val currentT = t.read()[0].toInt()
+                val currentT = t.readRegister()[0].toInt()
                 if (currentT > 0) {
-                    t.operate(byteArrayOf((currentT - 1).toByte()))
+                    t.operateOnRegister(byteArrayOf((currentT - 1).toByte()))
                 }
             } catch (e: Exception) {
                 // Handle exception silently
@@ -78,7 +77,7 @@ class CPU(
     // Read the next two instruction bytes from ROM
     private fun readNextInstructionBytes(): ByteArray {
         return try {
-            val pc = byteArrayToInt(p.read())
+            val pc = byteArrayToInt(p.readRegister())
             val byte1 = rom?.read(pc) ?: 0
             val byte2 = rom?.read(pc + 1) ?: 0
             byteArrayOf(byte1, byte2)

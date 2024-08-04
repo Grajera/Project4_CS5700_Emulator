@@ -15,19 +15,19 @@ class ReadInstruction(
     // Register to store the read value
     lateinit var rx: R
 
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         // Get the index for the register to operate on
         val rxIndex = nibbles[0].toInt()
         rx = r[rxIndex] // Assign the register
     }
 
-    public override fun performOperation() {
+    public override fun performInstruction() {
         // Read the mode from M register to determine memory usage
-        val mByteArray = m.read()
+        val mByteArray = m.readRegister()
         val isUsingROM = mByteArray[0].toInt() != 0
 
         // Read the address from the A register
-        val addressBytes = a.read()
+        val addressBytes = a.readRegister()
         val address = byteArrayToInt(addressBytes)
 
         // Read the value from the appropriate memory (ROM or RAM)
@@ -38,6 +38,6 @@ class ReadInstruction(
         }
 
         // Store the read value in the specified register
-        rx.operate(byteArrayOf(value))
+        rx.operateOnRegister(byteArrayOf(value))
     }
 }

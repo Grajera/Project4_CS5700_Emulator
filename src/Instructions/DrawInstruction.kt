@@ -15,7 +15,7 @@ class DrawInstruction(
     var row: Byte = 0
     var col: Byte = 0
 
-    public override fun processNibbles() {
+    public override fun processNibblesForInstruction() {
         // Get the register index and assign the register
         val rxIndex = nibbles[0].toInt()
         rx = r[rxIndex]
@@ -25,9 +25,9 @@ class DrawInstruction(
         col = nibbles[2]
     }
 
-    public override fun performOperation() {
+    public override fun performInstruction() {
         // Read the ASCII value from the register
-        val asciiValue = rx.read()[0].toInt()
+        val asciiValue = rx.readRegister()[0].toInt()
 
         // Validate the ASCII value
         if (asciiValue < 0 || asciiValue > 0x7F) {

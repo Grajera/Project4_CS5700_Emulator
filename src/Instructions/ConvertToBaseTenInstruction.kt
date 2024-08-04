@@ -15,26 +15,26 @@ class ConvertToBaseTenInstruction(
     private lateinit var rx: R
 
     // Process the nibbles to retrieve the register
-    override fun processNibbles() {
+    override fun processNibblesForInstruction() {
         rx = r[nibbles[0].toInt()]
     }
 
     // Perform the conversion and store the digits in memory
-    override fun performOperation() {
+    override fun performInstruction() {
         // Get the address from the A register
-        val address = byteArrayToInt(a.read())
+        val address = byteArrayToInt(a.readRegister())
 
         // Get the value from the specified register
-        val value = rx.read()[0].toInt()
+        val value = rx.readRegister()[0].toInt()
 
         // Ensure the value is within the valid range (0-255)
-        require(value in 0..255) { "Value in register rX must be between 0 and 255." }
+        require(value in 0..0XFF) { "Value in register rX must be between 0 and 255." }
 
         // Calculate the hundreds, tens, and ones digits
         val digits = intArrayOf(value / 100, (value % 100) / 10, value % 10)
 
         // Check if we are using ROM or RAM
-        if (m.read()[0].toInt() != 0) {
+        if (m.readRegister()[0].toInt() != 0) {
             RomManager.getRom()?.let { rom ->
                 // Write the digits to ROM
                 for (i in digits.indices) {
