@@ -6,32 +6,32 @@ import Memory.Registry_Handlers.RRegisterManager.r
 import Memory.Registry_Handlers.PRegisterManager.p
 import Memory.Registry_Handlers.R
 
-class SkipIfEqualInstruction (
+class SkipIfEqualInstruction(
     nibbles: ByteArray
 ) : BasicInstruction(nibbles) {
-    var shouldSkip = false
 
-    lateinit var rx: R
-    lateinit var ry: R
+    // Flag indicating whether to skip the next instruction
+    private var shouldSkipNextInstruction = false
+    private lateinit var registerX: R
+    private lateinit var registerY: R
 
+    // Processes the nibbles to identify the registers
     public override fun processNibbles() {
-        val rxIndex = nibbles[0].toInt()
-        val ryIndex = nibbles[1].toInt()
-        rx = r[rxIndex]
-        ry = r[ryIndex]
+        registerX = r[nibbles[0].toInt()] // First operand register
+        registerY = r[nibbles[1].toInt()] // Second operand register
     }
 
+    // Determines if the next instruction should be skipped
     public override fun performOperation() {
-        val rxValue = rx.read()[0].toInt()
-        val ryValue = ry.read()[0].toInt()
-
-        shouldSkip = (rxValue == ryValue)
+        shouldSkipNextInstruction = registerX.read()[0].toInt() == registerY.read()[0].toInt()
     }
 
+    // Increments the program counter based on the skip flag
     public override fun incrementProgramCounter() {
-        val currentPC = byteArrayToInt(p.read())
-        val offset = if (shouldSkip) 4 else 2
-        val newPC = currentPC + offset
-        p.operate(intToByteArray(newPC))
+        p.read().let { currentPBytes ->
+            val currentPC = byteArrayToInt(currentPBytes)
+            val offset = if (shouldSkipNextInstruction) 4 else 2
+            p.operate(intToByteArray(currentPC + offset))
+        }
     }
 }

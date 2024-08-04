@@ -1,6 +1,6 @@
 package Memory
 
-abstract class ContiguousMemory(
+abstract class PrimaryMemory(
     bytes: ByteArray
 ): Memory(bytes) {
     abstract fun read(address: Int): Byte

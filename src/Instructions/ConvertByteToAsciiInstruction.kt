@@ -3,32 +3,26 @@ package Instructions
 import Memory.Registry_Handlers.R
 import Memory.Registry_Handlers.RRegisterManager.r
 
-class ConvertByteToAsciiInstruction (
+class ConvertByteToAsciiInstruction(
     nibbles: ByteArray
 ) : BasicInstruction(nibbles) {
 
-    lateinit var rx: R
-    lateinit var ry: R
+    private lateinit var sourceRegister: R
+    private lateinit var targetRegister: R
 
-    public override fun processNibbles() {
-        val rxIndex = nibbles[0].toInt()
-        val ryIndex = nibbles[1].toInt()
-
-        rx = r[rxIndex]
-        ry = r[ryIndex]
+    // Retrieve the source and target registers from the nibbles
+    override fun processNibbles() {
+        sourceRegister = r[nibbles[0].toInt()]
+        targetRegister = r[nibbles[1].toInt()]
     }
 
-    public override fun performOperation() {
-        val value = rx.read()[0].toInt()
+    // Convert the byte in the source register to ASCII and store it in the target register
+    override fun performOperation() {
+        val value = sourceRegister.read()[0].toInt()
+        require(value in 0..0xF) { "Value in source register is out of range (0-F)." }
 
-        require(value <= 0xF) {"Value in rX is out of range (0-F)."}
-
-        val asciiValue = if (value < 10) {
-            (value + '0'.code).toByte()
-        } else {
-            (value - 10 + 'A'.code).toByte()
-        }
-
-        ry.operate(byteArrayOf(asciiValue))
+        // Convert to ASCII: '0'-'9' for 0-9, 'A'-'F' for 10-15
+        val asciiValue = (if (value < 10) value + '0'.code else value - 10 + 'A'.code).toByte()
+        targetRegister.operate(byteArrayOf(asciiValue))
     }
 }

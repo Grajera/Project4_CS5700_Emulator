@@ -1,6 +1,6 @@
 package Instructions
 
-import com.emulator.combineNibblesToByte
+import com.emulator.mergeNibblesToByte
 import Memory.Registry_Handlers.R
 import Memory.Registry_Handlers.RRegisterManager.r
 
@@ -18,7 +18,7 @@ class StoreInstruction (
         val highNibble = nibbles[1]
         val lowNibble = nibbles[2]
 
-        byte = combineNibblesToByte(highNibble, lowNibble)
+        byte = mergeNibblesToByte(highNibble, lowNibble)
     }
 
     public override fun performOperation() {

@@ -3,29 +3,35 @@ package Instructions
 import Memory.Registry_Handlers.R
 import Memory.Registry_Handlers.RRegisterManager.r
 
-class SubtractInstruction (
+// Class representing a subtract instruction that extends BasicInstruction
+class SubtractInstruction(
     nibbles: ByteArray
 ) : BasicInstruction(nibbles) {
-    lateinit var rx: R
-    lateinit var ry: R
-    lateinit var rz: R
 
+    // Register for the first operand
+    private lateinit var registerX: R
+    // Register for the second operand
+    private lateinit var registerY: R
+    // Register for the result
+    private lateinit var registerZ: R
+
+    // Processes the nibbles to identify the registers
     public override fun processNibbles() {
-        val rxIndex = nibbles[0].toInt()
-        val ryIndex = nibbles[1].toInt()
-        val rzIndex = nibbles[2].toInt()
-
-        rx = r[rxIndex]
-        ry = r[ryIndex]
-        rz = r[rzIndex]
+        // First operand register
+        registerX = r[nibbles[0].toInt()]
+        // Second operand register
+        registerY = r[nibbles[1].toInt()]
+        // Result register
+        registerZ = r[nibbles[2].toInt()]
     }
 
+    // Performs the subtraction operation
     public override fun performOperation() {
-        val rxValue = rx.read()[0].toInt()
-        val ryValue = ry.read()[0].toInt()
+        // Read values from the registers
+        val valueX = registerX.read()[0].toInt()
+        val valueY = registerY.read()[0].toInt()
 
-        val result = (rxValue - ryValue).toByte()
-
-        rz.operate(byteArrayOf(result))
+        // Store the result in the result register
+        registerZ.operate(byteArrayOf((valueX - valueY).toByte()))
     }
 }

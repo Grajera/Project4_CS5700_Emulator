@@ -7,26 +7,20 @@ class AddInstruction(
     nibbles: ByteArray
 ) : BasicInstruction(nibbles) {
 
-    lateinit var rx: R
-    lateinit var ry: R
-    lateinit var rz: R
+    private lateinit var rx: R
+    private lateinit var ry: R
+    private lateinit var rz: R
 
+    // Process the nibbles to initialize registers
     public override fun processNibbles() {
-        val rxIndex = nibbles[0].toInt()
-        val ryIndex = nibbles[1].toInt()
-        val rzIndex = nibbles[2].toInt()
-
-        rx = r[rxIndex]
-        ry = r[ryIndex]
-        rz = r[rzIndex]
+        rx = r[nibbles[0].toInt()]
+        ry = r[nibbles[1].toInt()]
+        rz = r[nibbles[2].toInt()]
     }
 
+    // Perform the addition and store the result in the specified register
     public override fun performOperation() {
-        val rxValue = rx.read()[0].toInt()
-        val ryValue = ry.read()[0].toInt()
-
-        val result = (rxValue + ryValue).toByte()
-
+        val result = (rx.read()[0].toInt() + ry.read()[0].toInt()).toByte()
         rz.operate(byteArrayOf(result))
     }
 }

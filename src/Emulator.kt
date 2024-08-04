@@ -7,23 +7,15 @@ import java.io.IOException
 
 class Emulator {
 
-    private val cpu = CPU()
+    private val cpu = CPU() // Initialize the CPU
 
     fun run(filePath: String? = null) {
-
-        var pathToBinaryFile = filePath
-
         try {
-            if (pathToBinaryFile == null) {
-                pathToBinaryFile = getPathToBinaryFile()
-            }
-
-            val binaryFile = getBinaryFile(pathToBinaryFile)
-
-            val binaryProgram = getBinaryProgramFromBinaryFile(binaryFile)
-            val rom = getRomFromBinaryProgram(binaryProgram)
-
-            cpu.executeProgram(rom)
+            // Determine the path to the binary file
+            val pathToBinaryFile = filePath ?: promptForBinaryFilePath()
+            // Read the binary program and execute it using the CPU
+            val binaryProgram = readBinaryProgram(pathToBinaryFile)
+            cpu.executeProgram(getRomFromBinaryProgram(binaryProgram))
 
         } catch (e: IOException) {
             println("An I/O error occurred: ${e.message}")
@@ -34,38 +26,32 @@ class Emulator {
         }
     }
 
-    private fun getPathToBinaryFile(): String {
+    // Prompt the user for the path to the binary file
+    private fun promptForBinaryFilePath(): String {
         println("Path to binary file: ")
-        val pathToBinaryFile = readlnOrNull() ?: throw IOException("No path provided")
-        return pathToBinaryFile
+        return readlnOrNull() ?: throw IOException("No path provided")
     }
 
-    private fun getBinaryFile(pathToBinaryFile: String): File {
-        val file = File(pathToBinaryFile)
-        if (!file.exists()) {
-            throw IOException("File not found: $pathToBinaryFile")
+    // Read the binary program from the given file path
+    private fun readBinaryProgram(path: String): ByteArray {
+        val file = File(path).apply {
+            // Check if the file exists
+            require(exists()) { "File not found: $path" }
         }
-        return file
-    }
 
-    private fun getBinaryProgramFromBinaryFile(binaryFile: File): ByteArray {
-        return try {
-            binaryFile.readBytes()
-        } catch (e: IOException) {
-            throw IOException("Failed to read binary file", e)
+        return file.readBytes().also {
+            // Check if the file is empty
+            require(it.isNotEmpty()) { "Binary file is empty" }
         }
     }
 
+    // Convert the binary program to a ROM object
     private fun getRomFromBinaryProgram(binaryProgram: ByteArray): ROM {
-        val memory = ByteArray(4096)
-        for (i in binaryProgram.indices) {
-            memory[i] = binaryProgram[i]
-        }
+        // Ensure memory size is 4096 bytes
+        val memory = binaryProgram.copyOf(4096)
+        // Initialize the ROM with the memory
         RomManager.initializeRom(memory)
-        val rom = RomManager.getRom()
-        if (rom == null) {
-            throw IOException("Failed to initialize ROM")
-        }
-        return rom
+        // Get the ROM or throw an error
+        return RomManager.getRom() ?: throw IOException("Failed to initialize ROM")
     }
 }

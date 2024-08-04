@@ -8,36 +8,44 @@ import Memory.Registry_Handlers.AManager.a
 import Memory.Registry_Handlers.MRegisterManager.m
 import Memory.Registry_Handlers.R
 
-class ConvertToBaseTenInstruction (
+class ConvertToBaseTenInstruction(
     nibbles: ByteArray
 ) : BasicInstruction(nibbles) {
-    lateinit var rx: R
 
-    public override fun processNibbles() {
-        val rxIndex = nibbles[0].toInt()
-        rx = r[rxIndex]
+    private lateinit var rx: R
+
+    // Process the nibbles to retrieve the register
+    override fun processNibbles() {
+        rx = r[nibbles[0].toInt()]
     }
 
-    public override fun performOperation() {
+    // Perform the conversion and store the digits in memory
+    override fun performOperation() {
+        // Get the address from the A register
         val address = byteArrayToInt(a.read())
 
+        // Get the value from the specified register
         val value = rx.read()[0].toInt()
 
-        val hundreds = value / 100
-        val tens = (value % 100) / 10
-        val ones = value % 10
+        // Ensure the value is within the valid range (0-255)
+        require(value in 0..255) { "Value in register rX must be between 0 and 255." }
 
-        val mByteArray = m.read()
-        val isUsingROM = mByteArray[0].toInt() != 0
+        // Calculate the hundreds, tens, and ones digits
+        val digits = intArrayOf(value / 100, (value % 100) / 10, value % 10)
 
-        if (isUsingROM) {
-            RomManager.getRom()!!.write(address, hundreds.toByte())
-            RomManager.getRom()!!.write(address + 1, tens.toByte())
-            RomManager.getRom()!!.write(address + 2, ones.toByte())
+        // Check if we are using ROM or RAM
+        if (m.read()[0].toInt() != 0) {
+            RomManager.getRom()?.let { rom ->
+                // Write the digits to ROM
+                for (i in digits.indices) {
+                    rom.write(address + i, digits[i].toByte())
+                }
+            } ?: throw IllegalStateException("ROM is not initialized.")
         } else {
-            RAM.write(address, hundreds.toByte())
-            RAM.write(address + 1, tens.toByte())
-            RAM.write(address + 2, ones.toByte())
+            // Write the digits to RAM
+            for (i in digits.indices) {
+                RAM.write(address + i, digits[i].toByte())
+            }
         }
     }
 }
