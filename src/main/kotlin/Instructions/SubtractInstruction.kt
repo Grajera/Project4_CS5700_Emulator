@@ -18,7 +18,7 @@ class SubtractInstruction(
     // Processes the nibbles to identify the registers
     public override fun processNibblesForInstruction() {
         // First operand register
-        registerX = r[nibbles[0].toInt()]
+       registerX = r[nibbles[0].toInt()]
         // Second operand register
         registerY = r[nibbles[1].toInt()]
         // Result register

@@ -8,8 +8,22 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
-object TimerManager {
-    val pause = AtomicBoolean(false)
+object Clock {
+    val paused = AtomicBoolean(false)
+
+    // Method to pause the timer
+    fun pauseTimer() {
+        paused.set(true)
+    }
+        // Method to resume the timer
+    fun resumeTimer() {
+        paused.set(false)
+    }
+
+    // Method to check if the timer is paused
+    fun isPaused(): Boolean {
+        return paused.get()
+    }
 }
 
 class CPU(
@@ -21,10 +35,13 @@ class CPU(
     private var rom: ROM? = null
 
     // Runnable to execute CPU instructions
-    private val cpuRunnable = Runnable {
+    private val cpu = Runnable {
         try {
-            val bytes = readNextInstructionBytes()
-            require(bytes.size == 2) { "ByteArray must contain exactly 2 bytes." }
+            fun splitNibbles(byte: Byte): Pair<Byte, Byte> {
+                // Extract the high and low nibbles
+                return (byte.toUByte().toInt() shr 4).toByte() to (byte.toUByte().toInt() and 0x0F).toByte()
+            }
+            val bytes = readNextPairInByteArray()
 
             // Shut down executor if both bytes are zero
             if (bytes.all { it.toInt() == 0 }) {
@@ -33,9 +50,10 @@ class CPU(
             }
 
             // Split bytes into nibbles and execute instruction
-            val (nibble0, nibble1) = splitByteIntoNibbles(bytes[0])
-            val (nibble2, nibble3) = splitByteIntoNibbles(bytes[1])
-            val instruction = instructionFactory.createInstruction(nibble0, nibble1, nibble2, nibble3)
+            // Split bytes into nibbles directly here
+            val (nibble0, nibble1) = splitNibbles(bytes[0])
+            val (nibble2, nibble3) = splitNibbles(bytes[1])
+            val instruction = instructionFactory.makeInstructions(nibble0, nibble1, nibble2, nibble3)
             instruction.execute()
         } catch (e: Exception) {
             executor.shutdown() // Shut down on error
@@ -43,8 +61,8 @@ class CPU(
     }
 
     // Runnable to manage timer updates
-    private val timerRunnable = Runnable {
-        if (!TimerManager.pause.get()) {
+    private val timer = Runnable {
+        if (!Clock.isPaused()) {
             try {
                 val currentT = t.readRegister()[0].toInt()
                 if (currentT > 0) {
@@ -57,32 +75,27 @@ class CPU(
     }
 
     // Start execution of the program with the provided ROM
-    fun executeProgram(rom: ROM) {
+    fun runBinaryFile(rom: ROM) {
         this.rom = rom
-
-        val cpuFuture = executor.scheduleAtFixedRate(cpuRunnable, 0, instructionSpeed, TimeUnit.MILLISECONDS)
-        val timerFuture = executor.scheduleAtFixedRate(timerRunnable, 0, timerSpeed, TimeUnit.MILLISECONDS)
-
         try {
-            cpuFuture.get()
-            timerFuture.get()
+        executor.scheduleAtFixedRate(cpu, 0, 2L, TimeUnit.MILLISECONDS).get()
+        executor.scheduleAtFixedRate(timer, 0, 16L, TimeUnit.MILLISECONDS).get()
         } catch (e: Exception) {
-            println("Exception during execution scheduling: ${e.message}")
-        } finally {
-            executor.shutdown() // Ensure executor is shut down
-            println("Executor service shut down")
+            // end of execution.
         }
+        executor.shutdown() // Ensure executor is shut down
+        println("Execution of program shut down")
     }
 
-    // Read the next two instruction bytes from ROM
-    private fun readNextInstructionBytes(): ByteArray {
+    // Read the next two instruction from ROM
+    private fun readNextPairInByteArray(): ByteArray {
         return try {
             val pc = byteArrayToInt(p.readRegister())
             val byte1 = rom?.read(pc) ?: 0
             val byte2 = rom?.read(pc + 1) ?: 0
             byteArrayOf(byte1, byte2)
         } catch (e: Exception) {
-            println("Exception while reading next instruction bytes: ${e.message}")
+            println("Exception while reading next instruction: ${e.message}")
             byteArrayOf(0, 0) // Return default if error occurs
         }
     }

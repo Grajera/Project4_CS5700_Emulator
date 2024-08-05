@@ -3,23 +3,23 @@ package Instructions
 class CPUInstructionsFactory {
 
     // Array of instruction constructors
-    private val instructionConstructors = arrayOf(
-        ::StoreInstruction,
-        ::AddInstruction,
-        ::SubtractInstruction,
-        ::ReadInstruction,
-        ::WriteInstruction,
-        ::JumpInstruction,
-        ::ReadKeyboardInstruction,
-        ::SwitchMemoryInstruction,
-        ::SkipIfEqualInstruction,
-        ::SkipIfNotEqualInstruction,
-        ::SetARegisterInstruction,
-        ::SetTRegisterInstruction,
-        ::ReadTRegisterInstruction,
-        ::ConvertToBaseTenInstruction,
-        ::ConvertByteToAsciiInstruction,
-        ::DrawInstruction
+    private val instructionConstructorsMap = mapOf(
+        0 to ::StoreInstruction,
+        1 to ::AddInstruction,
+        2 to ::SubtractInstruction,
+        3 to ::ReadInstruction,
+        4 to ::WriteInstruction,
+        5 to ::JumpInstruction,
+        6 to ::ReadKeyboardInstruction,
+        7 to ::SwitchMemoryInstruction,
+        8 to ::SkipIfEqualInstruction,
+        9 to ::SkipIfNotEqualInstruction,
+        10 to ::SetARegisterInstruction,
+        11 to ::SetTRegisterInstruction,
+        12 to ::ReadTRegisterInstruction,
+        13 to ::ConvertToBaseTenInstruction,
+        14 to ::ConvertByteToAsciiInstruction,
+        15 to ::DrawInstruction
     )
 
     /**
@@ -31,11 +31,14 @@ class CPUInstructionsFactory {
      * @param nibble3 The fourth nibble, typically used as an operand.
      * @return A new instance of the created instruction.
      */
-    fun createInstruction(nibble0: Byte, nibble1: Byte, nibble2: Byte, nibble3: Byte): BasicInstruction {
+    fun makeInstructions(nibble0: Byte, nibble1: Byte, nibble2: Byte, nibble3: Byte): BasicInstruction {
         // Get the instruction constructor using the first nibble as an index
-        val instructionConstructor = instructionConstructors[nibble0.toInt()]
+        require(instructionConstructorsMap.containsKey(nibble0.toInt())) {
+            "Invalid instruction nibble: $nibble0"
+        }
+        val constructor = instructionConstructorsMap[nibble0.toInt()]!!
 
         // Create an instruction instance with the remaining nibbles
-        return instructionConstructor(byteArrayOf(nibble1, nibble2, nibble3))
+        return constructor(byteArrayOf(nibble1, nibble2, nibble3))
     }
 }

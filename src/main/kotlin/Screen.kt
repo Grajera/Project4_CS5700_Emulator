@@ -17,7 +17,7 @@ class Screen {
     // Byte array representing the screen buffer
     val buffer: ByteArray = ByteArray(BUFFER_WIDTH * BUFFER_HEIGHT)
 
-    private fun display() {
+    fun display() {
         for (row in 0 until BUFFER_HEIGHT) {
             for (col in 0 until BUFFER_WIDTH) {
                 // Calculate the index in the buffer for the current row and column

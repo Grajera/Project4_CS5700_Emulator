@@ -1,6 +1,6 @@
 package Instructions
 
-import com.emulator.TimerManager
+import com.emulator.Clock
 import Memory.Registry_Handlers.R
 import Memory.Registry_Handlers.RRegisterManager.r
 
@@ -20,44 +20,38 @@ class ReadKeyboardInstruction(
 
     // Performs the operation of reading from the keyboard
     public override fun performInstruction() {
-        TimerManager.pause.set(true) // Pause operations
+        Clock.pauseTimer() // Pause operations
 
-        println("Enter up to 2 hexadecimal digits (0-F): ")
+        println("Enter your input: ")
         // Read user input
         val input = readln().trim().uppercase()
         // Parse input to byte
-        val byte = parseHexInput(input)
+        // Validate input and convert to byte
+        val formattedInput = if (input.isEmpty() || !input.matches(Regex("^[0-9A-F]*$"))) {
+            // Return 0 for invalid input
+            0.toByte()
+        } else {
+            try {
+                // Take at most 2 characters and convert to byte
+                input.take(2).toInt(16).toByte()
+            } catch (e: NumberFormatException) {
+                println("Error: Failed to parse hexadecimal input. Defaulting to 0.")
+                0.toByte() // Return 0 on parsing failure
+            }
+        }
 
         // Check for invalid input and provide feedback
         if (input.length > 2) {
             println("Input truncated to the first two hexadecimal digits.")
         }
 
-        if (byte.toInt() == 0 && input.isNotEmpty() && input != "00") {
+        if (formattedInput.toInt() == 0 && input.isNotEmpty() && input != "00") {
             println("Invalid hexadecimal input. Defaulting to 0.")
         }
 
         // Set the target register with the parsed byte
-        targetRegister.operateOnRegister(byteArrayOf(byte))
+        targetRegister.operateOnRegister(byteArrayOf(formattedInput))
         // Resume operations
-        TimerManager.pause.set(false)
-    }
-
-    private fun parseHexInput(input: String): Byte {
-        if (input.isEmpty() || !input.matches(Regex("^[0-9A-F]*$"))) {
-            // Return 0 for invalid input
-            return 0
-        }
-
-        return try {
-            // Take at most 2 characters
-            val hexString = input.take(2)
-            // Convert to byte
-            hexString.toInt(16).toByte()
-        } catch (e: NumberFormatException) {
-            println("Error: Failed to parse hexadecimal input. Defaulting to 0.")
-            // Return 0 on parsing failure
-            return 0
-        }
+        Clock.resumeTimer()
     }
 }

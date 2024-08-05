@@ -8,12 +8,12 @@ class StoreInstruction (
     nibbles: ByteArray
 ) : BasicInstruction(nibbles) {
 
-    lateinit var rx: R
+    lateinit var registerX: R
     var byte: Byte = 0
 
     public override fun processNibblesForInstruction() {
-        val rxIndex = nibbles[0].toInt()
-        rx = r[rxIndex]
+        val registerXIndex = nibbles[0].toInt()
+        registerX = r[registerXIndex]
 
         val highNibble = nibbles[1]
         val lowNibble = nibbles[2]
@@ -22,6 +22,6 @@ class StoreInstruction (
     }
 
     public override fun performInstruction() {
-        rx.operateOnRegister(byteArrayOf(byte))
+        registerX.operateOnRegister(byteArrayOf(byte))
     }
 }

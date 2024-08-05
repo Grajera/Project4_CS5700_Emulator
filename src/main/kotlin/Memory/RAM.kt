@@ -6,11 +6,11 @@ object RamManager {
 
 class RAM : PrimaryMemory(ByteArray(4096)) { // 4096 bytes for RAM
     // Reads a byte from the specified address
-    override fun read(address: Int): Byte = bytes[address]
+    override fun read(address: Int): Byte = memoryValues[address]
 
     // Writes a byte to the specified address
-    override fun write(address: Int, byte: Byte) {
+    override fun writeToMemory(address: Int, byte: Byte) {
         // Store the byte at the address
-        bytes[address] = byte
+        memoryValues[address] = byte
     }
 }

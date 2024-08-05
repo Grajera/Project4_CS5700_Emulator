@@ -1,5 +1,7 @@
 package Memory
 
+import java.lang.IllegalStateException
+
 object RomManager {
     private var rom: ROM? = null // Holds the initialized ROM instance
 
@@ -14,10 +16,10 @@ object RomManager {
 
 class ROM(bytes: ByteArray) : PrimaryMemory(bytes) {
     // Reads a byte from the specified address in the ROM
-    override fun read(address: Int): Byte = bytes[address]
+    override fun read(address: Int): Byte = memoryValues[address]
 
     // Prevents writing to ROM
-    override fun write(address: Int, byte: Byte) {
-        throw UnsupportedOperationException("Cannot write to Read Only Memory")
+    override fun writeToMemory(address: Int, byte: Byte) {
+        throw IllegalStateException("Cannot write to Read Only Memory")
     }
 }

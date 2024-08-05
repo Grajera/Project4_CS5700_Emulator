@@ -1,6 +1,6 @@
 package Instructions
 
-import com.emulator.TimerManager
+import com.emulator.Clock
 import Memory.Registry_Handlers.R
 import Memory.Registry_Handlers.RRegisterManager.r
 import Memory.Registry_Handlers.TRegisterManager.t
@@ -22,7 +22,7 @@ class ReadTRegisterInstruction(
     // Performs the operation of reading the T register
     public override fun performInstruction() {
         // Pause operations
-        TimerManager.pause.set(true)
+        Clock.pauseTimer()
 
         // Read the value from the T register
         val tValue = t.readRegister()[0]
@@ -31,6 +31,6 @@ class ReadTRegisterInstruction(
         targetRegister.operateOnRegister(byteArrayOf(tValue))
 
         // Resume operations
-        TimerManager.pause.set(false)
+        Clock.resumeTimer()
     }
 }

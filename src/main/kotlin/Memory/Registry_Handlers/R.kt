@@ -9,11 +9,11 @@ object RRegisterManager {
 class R : Register(ByteArray(1)) {
 
     // Writes a byte to the R register from the provided ByteArray
-    override fun writeToRegister(bytes: ByteArray) {
+    override fun writeToRegister(inputValues: ByteArray) {
         // Ensure the ByteArray is of the correct size
-        require(bytes.size == 1) { "ByteArray must be of size 1." }
+        require(inputValues.size == 1) { "ByteArray must be of size 1." }
         // Copy the byte from the input array to the R register's byte array
-        bytes.copyInto(destination = this.bytes, startIndex = 0, endIndex = 1)
+        inputValues.copyInto(destination = this.memoryValues, startIndex = 0, endIndex = 1)
     }
 }
 

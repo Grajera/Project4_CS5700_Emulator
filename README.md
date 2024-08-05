@@ -1,5 +1,5 @@
 
-#  Assignment 4: D5700 Computer Emulator
+#  Assignment 4: D5700 ComputerComponents Emulator
 In this assignment you will build an emulator for a simple computer system that I invented called the D5700. Emulation is when you take a physical computer system and write software versions of the core hardware components. For example, RAM can be represented in software as a simple array of bytes, a CPU instruction is just a function that can be called, a register is just a variable. The idea of emulation is to take software written for a specific computer and be able to run it on another computer system with a different architecture.
 
 Examples of commercial emulators:

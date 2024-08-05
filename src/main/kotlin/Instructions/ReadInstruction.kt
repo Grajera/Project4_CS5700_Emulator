@@ -5,7 +5,7 @@ import Memory.Registry_Handlers.RRegisterManager.r
 import Memory.Registry_Handlers.MRegisterManager.m
 import Memory.RamManager.RAM
 import Memory.RomManager
-import Memory.Registry_Handlers.AManager.a
+import Memory.Registry_Handlers.ARegisterManager.a
 import Memory.Registry_Handlers.R
 
 class ReadInstruction(
@@ -13,12 +13,12 @@ class ReadInstruction(
 ) : BasicInstruction(nibbles) {
 
     // Register to store the read value
-    lateinit var rx: R
+    lateinit var registerX: R
 
     public override fun processNibblesForInstruction() {
         // Get the index for the register to operate on
-        val rxIndex = nibbles[0].toInt()
-        rx = r[rxIndex] // Assign the register
+        val registerXIndex = nibbles[0].toInt()
+        registerX = r[registerXIndex] // Assign the register
     }
 
     public override fun performInstruction() {
@@ -38,6 +38,6 @@ class ReadInstruction(
         }
 
         // Store the read value in the specified register
-        rx.operateOnRegister(byteArrayOf(value))
+        registerX.operateOnRegister(byteArrayOf(value))
     }
 }
