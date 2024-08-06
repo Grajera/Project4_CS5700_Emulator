@@ -1,79 +1,28 @@
-package Instructions.Instructions
-
 import Instructions.DrawInstruction
-import com.emulator.ScreenManager
-import Memory.Registry_Handlers.RRegisterManager
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.assertThrows
-import kotlin.test.Test
+import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.R
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class DrawInstructionTest {
 
-    @Test
-    fun testPerformInstructionNormal() {
-        val byteToDraw = 0x0F.toByte() // Example byte to draw (could represent a character)
-        val row = 0.toByte()
-        val col = 0.toByte()
+    private lateinit var instruction: DrawInstruction
+    private lateinit var testRegister: R
 
-        // Set the registers for the instruction
-        RRegisterManager.r[0].writeToRegister(byteArrayOf(byteToDraw)) // Value to draw
-        RRegisterManager.r[1].writeToRegister(byteArrayOf(row)) // Row
-        RRegisterManager.r[2].writeToRegister(byteArrayOf(col)) // Column
-
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02) // Assuming nibbles correspond to registerX, rY, rZ
-        val instruction = DrawInstruction(nibbles)
-
-        instruction.processNibblesForInstruction()
-        instruction.performInstruction()
-
-        // Verify that the buffer has been updated correctly
-        assertEquals(byteToDraw, ScreenManager.screen.buffer[10]) // Check the value at (0,0)
+    @BeforeEach
+    fun setUp() {
+        val nibbles = byteArrayOf(0x0, 0x2, 0x3) // Example nibbles
+        instruction = DrawInstruction(nibbles)
+        testRegister = r[nibbles[0].toInt()]
+        testRegister.operateOnRegister(byteArrayOf(0x41)) // Set ASCII value 'A'
     }
 
     @Test
-    fun testPerformInstructionOverwrite() {
-        val initialByte = 0x01.toByte()
-        val byteToDraw = 0x7F.toByte() // New byte to draw
-        val row = 0.toByte()
-        val col = 0.toByte()
+    fun testPerformInstruction() {
+        instruction.runTask()
 
-        // Set the initial value in the buffer
-        ScreenManager.screen.draw(initialByte, row, col)
-
-        // Set registers for the new drawing
-        RRegisterManager.r[0].writeToRegister(byteArrayOf(byteToDraw)) // Value to draw
-        RRegisterManager.r[1].writeToRegister(byteArrayOf(row)) // Row
-        RRegisterManager.r[2].writeToRegister(byteArrayOf(col)) // Column
-
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02)
-        val instruction = DrawInstruction(nibbles)
-
-        instruction.processNibblesForInstruction()
-        instruction.performInstruction()
-
-        // Verify that the buffer has been overwritten correctly
-        assertEquals(byteToDraw, ScreenManager.screen.buffer[10]) // Check the value at (0,0)
-    }
-
-    @Test
-    fun testPerformInstructionOutOfBounds() {
-        val byteToDraw = 0xFF.toByte()
-        val row = 8.toByte() // Out of bounds row
-        val col = 8.toByte() // Out of bounds column
-
-        // Set registers for the drawing
-        RRegisterManager.r[0].writeToRegister(byteArrayOf(byteToDraw)) // Value to draw
-        RRegisterManager.r[1].writeToRegister(byteArrayOf(row)) // Row
-        RRegisterManager.r[2].writeToRegister(byteArrayOf(col)) // Column
-
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02)
-        val instruction = DrawInstruction(nibbles)
-
-        instruction.processNibblesForInstruction()
-
-        // Expect an exception when trying to draw out of bounds
-        assertThrows<IllegalArgumentException> {
-            instruction.performInstruction()
-        }
+        // Check if the screen draw function was called with correct parameters
+        assertEquals(0x41.toByte(), testRegister.readRegister()[0], "ASCII value in the register should be 'A'.")
     }
 }

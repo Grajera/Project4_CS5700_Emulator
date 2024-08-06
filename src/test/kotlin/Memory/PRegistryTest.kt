@@ -7,7 +7,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.assertFailsWith
 
 class PRegistryTest {
-    private lateinit var p: P
+    lateinit var p: P
 
     @BeforeTest
     fun setUp() {

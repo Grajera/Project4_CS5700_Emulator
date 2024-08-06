@@ -1,27 +1,23 @@
 package Instructions
 
-import com.emulator.mergeNibblesToByte
 import Memory.Registry_Handlers.R
 import Memory.Registry_Handlers.RRegisterManager.r
+import com.emulator.mergeNibblesToByte
 
-class StoreInstruction (
+class StoreInstruction(
     nibbles: ByteArray
 ) : BasicInstruction(nibbles) {
 
     lateinit var registerX: R
-    var byte: Byte = 0
+    private var byte: Byte = 0
 
-    public override fun processNibblesForInstruction() {
-        val registerXIndex = nibbles[0].toInt()
-        registerX = r[registerXIndex]
+    public override fun runTask() {
+        registerX = r[nibbles[0].toInt()]
 
-        val highNibble = nibbles[1]
-        val lowNibble = nibbles[2]
+        // Extract the byte from nibbles
+        byte = mergeNibblesToByte(nibbles[1], nibbles[2])
 
-        byte = mergeNibblesToByte(highNibble, lowNibble)
-    }
-
-    public override fun performInstruction() {
+        // Store the byte in the register
         registerX.operateOnRegister(byteArrayOf(byte))
     }
 }

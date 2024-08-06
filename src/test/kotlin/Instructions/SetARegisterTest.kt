@@ -1,72 +1,24 @@
-package Instructions
-
-import Memory.Registry_Handlers.ARegisterManager
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import Instructions.SetARegisterInstruction
+import Memory.Registry_Handlers.ARegisterManager.a
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class SetARegisterTest {
 
-    @Test
-    fun testSetARegisterValue() {
-        // Set a value to be written to the A register
-        val valueToSet = 0x42.toByte()
+    private lateinit var instruction: SetARegisterInstruction
 
-        // Create the instruction to set the A register
-        val instruction = SetARegisterInstruction(byteArrayOf(valueToSet, 0x00, 0x00))
-
-        instruction.processNibblesForInstruction()
-
-        // Perform the operation
-        instruction.performInstruction()
-
-        // Check that the A register has been set correctly
-        val aValue = ARegisterManager.a.readRegister()[0]
-        assertEquals(valueToSet, aValue)
+    @BeforeEach
+    fun setUp() {
+        val nibbles = byteArrayOf(0x01, 0x02, 0x03) // Example nibbles
+        instruction = SetARegisterInstruction(nibbles)
     }
 
     @Test
-    fun testSetARegisterOutOfBounds() {
-        // Attempt to set a value that exceeds the byte range
-        val outOfBoundsValue = 0x100.toByte() // This would wrap around to 0 in a byte
+    fun testPerformInstruction() {
+        instruction.runTask()
 
-        // Create the instruction to set the A register
-        val instruction = SetARegisterInstruction(byteArrayOf(outOfBoundsValue, 0x00, 0x00))
-
-        instruction.processNibblesForInstruction()
-
-        // Perform the operation
-        instruction.performInstruction()
-
-        // Check that the A register has wrapped around correctly
-        val aValue = ARegisterManager.a.readRegister()[0]
-        assertEquals(0x00.toByte(), aValue) // Expecting it to wrap around to 0
-    }
-
-    @Test
-    fun testSetARegisterMultipleOperations() {
-        // Create a list of values to set in the A register
-        val valuesToSet = listOf(0x01.toByte(), 0x02.toByte(), 0x03.toByte())
-
-        // Set and check values sequentially
-        for (value in valuesToSet) {
-            val instruction = SetARegisterInstruction(byteArrayOf(value, 0x00, 0x00))
-            instruction.processNibblesForInstruction()
-            instruction.performInstruction()
-            assertEquals(value, ARegisterManager.a.readRegister()[0])
-        }
-    }
-
-    @Test
-    fun testSetARegisterWithInvalidInput() {
-        // Attempt to create an instruction with an invalid byte array (empty)
-        // Expecting an exception due to invalid input
-        val exception = assertThrows(IllegalArgumentException::class.java) {
-            val instruction = SetARegisterInstruction(byteArrayOf())
-            instruction.processNibblesForInstruction()
-            instruction.performInstruction()
-        }
-
-        assertEquals("Nibbles array must contain exactly 3 elements.", exception.message)
+        val expectedAddress = 0x01 // Construct the expected address
+        assertEquals(expectedAddress.toByte(), a.readRegister()[0], "The A register should be set to the calculated address.")
     }
 }

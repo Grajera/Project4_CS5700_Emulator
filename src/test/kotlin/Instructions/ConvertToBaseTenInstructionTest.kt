@@ -1,62 +1,70 @@
 package Instructions
-
 import Memory.Registry_Handlers.RRegisterManager
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertEquals
 import kotlin.test.assertFailsWith
 
 class ConvertToBaseTenInstructionTest {
 
-    @Test
-    fun testProcessNibbles() {
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02) // Assuming registerX = 0, rY = 1
-        val instruction = ConvertToBaseTenInstruction(nibbles)
+    private lateinit var instruction: ConvertToBaseTenInstruction
 
-        instruction.processNibblesForInstruction()
+    @BeforeEach
+    fun setUp() {
+        // Initialize the instruction with sample nibbles (assuming it points to the correct registers)
+        val nibbles = byteArrayOf(0, 1, 0) // Example: Using registers 0 for input and 1 for output
+        instruction = ConvertToBaseTenInstruction(nibbles)
 
-        // Verify that the correct register is set
-        assertEquals(RRegisterManager.r[0], instruction.registerX)
+        // Set initial values in registers for testing
+        RRegisterManager.r[0].operateOnRegister(byteArrayOf(0b1010)) // Binary 1010 (10 in decimal)
+        RRegisterManager.r[1].operateOnRegister(byteArrayOf(0)) // Initialize output register
     }
 
     @Test
-    fun testPerformInstructionNormal() {
-        val registerX = RRegisterManager.r[0]
-        registerX.writeToRegister(byteArrayOf(0b00000011)) // 3 in binary
+    fun testConvertToBaseTen() {
+        instruction.runTask() // Perform the conversion
 
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02)
-        val instruction = ConvertToBaseTenInstruction(nibbles)
-        instruction.processNibblesForInstruction()
+        // Read the result from the output register
+        val result = RRegisterManager.r[0].readRegister()[0].toInt()
 
-        instruction.performInstruction()
-
-        // Expect decimal '3' in the output register
-        assertEquals(0x03.toByte(), registerX.readRegister()[0])
+        // Check that the result is correct (10 in base ten)
+        assertEquals(10, result)
     }
 
     @Test
-    fun testPerformInstructionMaxValue() {
-        val registerX = RRegisterManager.r[0]
-        registerX.writeToRegister(byteArrayOf(0b11111111.toByte())) // 255 in binary
+    fun testConvertZero() {
+        // Set the input register to 0
+        RRegisterManager.r[0].operateOnRegister(byteArrayOf(0))
 
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02)
-        val instruction = ConvertToBaseTenInstruction(nibbles)
-        instruction.processNibblesForInstruction()
-        // Expect decimal '255' in the output register so throw error.
+        instruction.runTask() // Perform the conversion
+
+        // Read the result from the output register
+        val result = RRegisterManager.r[1].readRegister()[0].toInt()
+
+        // Check that the result is 0
+        assertEquals(0, result)
+    }
+
+    @Test
+    fun testConvertNegative() {
+        // Set the input register to a negative number (represented in two's complement)
+        RRegisterManager.r[0].operateOnRegister(byteArrayOf((-10).toByte()))
         assertFailsWith<IllegalArgumentException> {
-            instruction.performInstruction()
+            instruction.runTask()
         }
     }
 
     @Test
-    fun testPerformInstructionOutOfBounds() {
-        val registerX = RRegisterManager.r[0]
-        registerX.writeToRegister(byteArrayOf(0b100000000.toByte())) // 256 in binary (out of range)
+    fun testConvertOverflow() {
+        // Set the input register to the maximum byte value
+        RRegisterManager.r[0].operateOnRegister(byteArrayOf(127)) // 127 in decimal
 
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02)
-        val instruction = ConvertToBaseTenInstruction(nibbles)
-        instruction.processNibblesForInstruction()
+        instruction.runTask() // Perform the conversion
 
-        // Expect decimal '0' in the output register
-        assertEquals(0x00.toByte(), registerX.readRegister()[0])
+        // Read the result from the output register
+        val result = RRegisterManager.r[0].readRegister()[0].toInt()
+
+        // Check that the result is correct (127 in base ten)
+        assertEquals(127, result)
     }
 }

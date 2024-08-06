@@ -1,68 +1,62 @@
 package Instructions
 
 import Memory.Registry_Handlers.RRegisterManager
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 
 class ConvertByteToAsciiInstructionTest {
-    @Test
-    fun testProcessNibbles() {
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02) // registerX = 0, rY = 1
-        val instruction = ConvertByteToAsciiInstruction(nibbles)
 
-        instruction.processNibblesForInstruction()
+    private lateinit var instruction: ConvertByteToAsciiInstruction
 
-        // Verify that the correct registers are set
-        assertEquals(RRegisterManager.r[0], instruction.sourceRegister)
-        assertEquals(RRegisterManager.r[1], instruction.targetRegister)
+    @BeforeEach
+    fun setUp() {
+        // Initialize the instruction with a sample nibble (assuming it points to the correct register)
+        val nibbles = byteArrayOf(0,0,0) // Assume the first nibble points to the target register
+        instruction = ConvertByteToAsciiInstruction(nibbles)
+
+        // Set a valid ASCII byte in the R register for testing
+        RRegisterManager.r[0].operateOnRegister(byteArrayOf(65)) // 'A' in ASCII
     }
 
     @Test
-    fun testPerformInstructionNormal() {
-        val registerX = RRegisterManager.r[0]
-        registerX.writeToRegister(byteArrayOf(0x05)) // 5 in register
-        val ry = RRegisterManager.r[1]
+    fun testConvertByteToAscii() {
+        RRegisterManager.r[0].operateOnRegister(byteArrayOf(0x01))
+        instruction.runTask() // Perform the conversion
 
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02)
-        val instruction = ConvertByteToAsciiInstruction(nibbles)
-        instruction.processNibblesForInstruction()
+        // Read the converted ASCII value from the register
+        val result = RRegisterManager.r[0].readRegister()[0].toInt()
 
-        instruction.performInstruction()
-
-        // Expect ASCII '5' in the output register (0x35)
-        assertEquals(0x35.toByte(), ry.readRegister()[0])
+        // Check that the result is the correct ASCII value for '0'
+        assertEquals(49, result) // ASCII value for '0'
     }
 
     @Test
-    fun testPerformInstructionNormalForUpperBound() {
-        val registerX = RRegisterManager.r[0]
-        registerX.writeToRegister(byteArrayOf(0x0A)) // 10 in register
-        val ry = RRegisterManager.r[1]
+    fun testConvertInvalidByteToAscii() {
+        // Set an invalid ASCII value (greater than 127)
+        RRegisterManager.r[0].operateOnRegister(byteArrayOf(200.toByte())) // Out of ASCII range
 
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02)
-        val instruction = ConvertByteToAsciiInstruction(nibbles)
-        instruction.processNibblesForInstruction()
-
-        instruction.performInstruction()
-
-        // Expect ASCII 'A' in the output register (0x41)
-        assertEquals(0x41.toByte(), ry.readRegister()[0])
-    }
-
-    @Test
-    fun testPerformInstructionOutOfBounds() {
-        val registerX = RRegisterManager.r[0]
-        registerX.writeToRegister(byteArrayOf(0x10)) // 16 in register (out of range)
-        val ry = RRegisterManager.r[1]
-
-        val nibbles = byteArrayOf(0x00, 0x01, 0x02)
-        val instruction = ConvertByteToAsciiInstruction(nibbles)
-        instruction.processNibblesForInstruction()
-
-        // Expect an exception when trying to convert an out of range value
-        assertFailsWith <IllegalArgumentException> {
-            instruction.performInstruction()
+        // Execute the conversion and expect an exception
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            instruction.runTask()
         }
+
+        // Check that the exception message is appropriate
+        assertEquals("Value in source register is out of range (0-127).", exception.message)
+    }
+
+    @Test
+    fun testConvertByteToAsciiHandlesNegativeValue() {
+        // Set a negative value (if applicable)
+        RRegisterManager.r[0].operateOnRegister(byteArrayOf(-1)) // Assuming -1 is represented as 255 in a byte
+
+        // Execute the conversion and expect an exception
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            instruction.runTask()
+        }
+
+        // Check that the exception message is appropriate
+        assertEquals("Value in source register is out of range (0-127).", exception.message)
     }
 }

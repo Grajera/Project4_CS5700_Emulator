@@ -1,41 +1,36 @@
-package Instructions
-
-import Memory.Registry_Handlers.PRegisterManager
-import org.junit.jupiter.api.Assertions.assertEquals
-import kotlin.test.BeforeTest
-import kotlin.test.Test
+import Instructions.JumpInstruction
+import Memory.Registry_Handlers.PRegisterManager.p
+import com.emulator.byteArrayToInt
+import com.emulator.intToByteArray
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
 class JumpInstructionTest {
+
     private lateinit var instruction: JumpInstruction
-    private val initialPC = 0x0000 // Initial Program Counter
 
-    @BeforeTest
+    @BeforeEach
     fun setUp() {
-        PRegisterManager.p.operateOnRegister(byteArrayOf(initialPC.toByte(), (initialPC shr 8).toByte())) // Set initial Program Counter
+        val nibbles = byteArrayOf(0x0, 0x1, 0x2) // Example nibbles
+        instruction = JumpInstruction(nibbles)
     }
 
     @Test
-    fun testProcessNibbles() {
-        val nibbles = byteArrayOf(0x02, 0x00, 0x00) // Jump to address 0x0002
-        instruction = JumpInstruction(nibbles)
+    fun testPerformInstruction() {
+        instruction.runTask()
 
-        instruction.processNibblesForInstruction() // Process nibbles to extract the jump address
+        val expectedPC = intToByteArray(0x0012) // Expected address calculated from nibbles
 
-        // Check if the address is correctly set (in this case, the address should be 0x0002)
-        assertEquals(0x0002, instruction.newLocationInMemory[0])
+        assertContentEquals(expectedPC, p.readRegister(), "Program counter should be set correctly.")
     }
 
     @Test
-    fun testPerformJump() {
-        val nibbles = byteArrayOf(0x05, 0x00, 0x00) // Jump to address 0x0005
-        instruction = JumpInstruction(nibbles)
-        instruction.processNibblesForInstruction() // Process nibbles to extract the jump address
-
-        instruction.performInstruction() // Perform the jump operation
-
-        // Verify that the Program Counter has been updated correctly
-        val newP = PRegisterManager.p.readRegister()
-        val expectedP = byteArrayOf(0x05.toByte(), 0x00.toByte()) // Expected new PC value
-        assertEquals(expectedP.toList(), newP.toList()) // Check if the PC is now pointing to 0x0005
+    fun testIncrementProgramCounter() {
+        instruction.incrementProgramCounter() //should do nothing.
+        val initialPC = byteArrayToInt(p.readRegister())
+        instruction.incrementProgramCounter() //should do nothing.
+        assertEquals(initialPC, byteArrayToInt(p.readRegister()))
     }
 }

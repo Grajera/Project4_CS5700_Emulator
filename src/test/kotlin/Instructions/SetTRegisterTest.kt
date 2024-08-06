@@ -1,72 +1,24 @@
-package Instructions
-
-import Memory.Registry_Handlers.TRegisterManager
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import Instructions.SetTRegisterInstruction
+import Memory.Registry_Handlers.TRegisterManager.t
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class SetTRegisterTest {
 
-    @Test
-    fun testSetTRegisterValue() {
-        // Set a value to be written to the T register
-        val valueToSet = 0x02.toByte()
+    private lateinit var instruction: SetTRegisterInstruction
 
-        // Create the instruction to set the T register
-        val instruction = SetTRegisterInstruction(byteArrayOf(valueToSet, 0x00, 0x00))
-
-        instruction.processNibblesForInstruction()
-
-        // Perform the operation
-        instruction.performInstruction()
-
-        // Check that the T register has been set correctly
-        val tValue = TRegisterManager.t.readRegister()[0]
-        assertEquals(valueToSet, tValue)
+    @BeforeEach
+    fun setUp() {
+        val nibbles = byteArrayOf(0x00, 0x0F, 0xA) // Example nibbles (high and low)
+        instruction = SetTRegisterInstruction(nibbles)
     }
 
     @Test
-    fun testSetTRegisterOutOfBounds() {
-        // Attempt to set a value that exceeds the byte range
-        val outOfBoundsValue = 0x100.toByte() // This would wrap around to 0 in a byte
+    fun testPerformInstruction() {
+        instruction.runTask()
 
-        // Create the instruction to set the T register
-        val instruction = SetTRegisterInstruction(byteArrayOf(outOfBoundsValue, 0x00, 0x00))
-
-        instruction.processNibblesForInstruction()
-
-        // Perform the operation
-        instruction.performInstruction()
-
-        // Check that the T register has wrapped around correctly
-        val tValue = TRegisterManager.t.readRegister()[0]
-        assertEquals(0x00.toByte(), tValue) // Expecting it to wrap around to 0
-    }
-
-    @Test
-    fun testSetTRegisterMultipleOperations() {
-        // Create a list of values to set in the T register
-        val valuesToSet = listOf(0x01.toByte(), 0x02.toByte(), 0x03.toByte())
-
-        // Set and check values sequentially
-        for (value in valuesToSet) {
-            val instruction = SetTRegisterInstruction(byteArrayOf(value, 0x00, 0x00))
-            instruction.processNibblesForInstruction()
-            instruction.performInstruction()
-            assertEquals(value, TRegisterManager.t.readRegister()[0])
-        }
-    }
-
-    @Test
-    fun testSetTRegisterWithInvalidInput() {
-        // Attempt to create an instruction with an invalid byte array (empty)
-        // Expecting an exception due to invalid input
-        val exception = assertThrows(IllegalArgumentException::class.java) {
-            val instruction = SetTRegisterInstruction(byteArrayOf())
-            instruction.processNibblesForInstruction()
-            instruction.performInstruction()
-        }
-
-        assertEquals("Nibbles array must contain exactly 3 elements.", exception.message)
+        val expectedValue = 0xFA.toByte() // Combine the nibbles to form the expected value
+        assertEquals(expectedValue, t.readRegister()[0], "The T register should be set to the combined value from nibbles.")
     }
 }

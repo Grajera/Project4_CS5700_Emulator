@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test
 import kotlin.concurrent.thread
 
 class CPUComponentTest {
-    private lateinit var cpu: CPU
-    private lateinit var rom: ROM
+    lateinit var cpu: CPU
+    lateinit var rom: ROM
 
     @BeforeEach
     fun setUp() {

@@ -8,7 +8,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.assertFailsWith
 
 class ScreenTest {
-    private lateinit var screen: Screen
+    lateinit var screen: Screen
 
     @BeforeTest
     fun setUp() {

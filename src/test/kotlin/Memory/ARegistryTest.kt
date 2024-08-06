@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.BeforeTest
 
 class ARegistryTest {
-    private lateinit var a: A
+    lateinit var a: A
 
     @BeforeTest
     fun setUp() {

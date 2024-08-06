@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.BeforeTest
 
 class RRegistryTest {
-    private lateinit var r: R
+    lateinit var r: R
 
     @BeforeTest
     fun setUp() {
