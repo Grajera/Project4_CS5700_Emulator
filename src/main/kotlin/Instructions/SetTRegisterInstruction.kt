@@ -1,8 +1,8 @@
 package Instructions
 
 import com.emulator.Clock
-import com.emulator.mergeNibblesToByte
-import Memory.Registry_Handlers.TRegisterManager.t
+import com.emulator.Utils.mergeNibblesToByte
+import Memory.Registry_Handlers.TRegisterInstance.t
 
 class SetTRegisterInstruction(
     nibbles: ByteArray

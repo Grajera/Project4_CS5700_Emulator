@@ -2,8 +2,9 @@ package com.emulator
 
 import Instructions.CPUInstructionsFactory
 import Memory.ROM
-import Memory.Registry_Handlers.PRegisterManager.p
-import Memory.Registry_Handlers.TRegisterManager.t
+import Memory.Registry_Handlers.PRegisterInstance.p
+import Memory.Registry_Handlers.TRegisterInstance.t
+import com.emulator.Utils.byteArrayToInteger
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -84,13 +85,13 @@ class CPU(
             // end of execution.
         }
         executor.shutdown() // Ensure executor is shut down
-        println("Execution of program shut down")
+        println("Execution of program stopped")
     }
 
     // Read the next two instruction from ROM
     private fun readNextPairInByteArray(): ByteArray {
         return try {
-            val pc = byteArrayToInt(p.readRegister())
+            val pc = byteArrayToInteger(p.readRegister())
             val byte1 = rom?.read(pc) ?: 0
             val byte2 = rom?.read(pc + 1) ?: 0
             byteArrayOf(byte1, byte2)

@@ -1,10 +1,10 @@
 import Instructions.ReadInstruction
-import Memory.Registry_Handlers.ARegisterManager.a
-import Memory.Registry_Handlers.MRegisterManager.m
-import Memory.Registry_Handlers.RRegisterManager.r
-import Memory.RamManager.RAM
+import Memory.Registry_Handlers.ARegisterInstance.a
+import Memory.Registry_Handlers.MRegisterInstance.m
+import Memory.Registry_Handlers.RRegisterInstance.r
+import Memory.RamInstance.RAM
 import Memory.Registry_Handlers.R
-import Memory.RomManager
+import Memory.RomInstance
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -36,10 +36,10 @@ class ReadInstructionTest {
     fun testPerformInstruction_ReadFromROM() {
         // Switch to ROM mode and set a value in ROM
         m.operateOnRegister(byteArrayOf(1)) // Switch to ROM mode
-        RomManager.initializeRom(byteArrayOf(0xFF.toByte())) // Ensure ROM is initialized
+        RomInstance.initializeRom(byteArrayOf(0xFF.toByte())) // Ensure ROM is initialized
         assertFailsWith<IllegalStateException> {
             // Cannot Write value to ROM}
-            RomManager.getRom()?.writeToMemory(0x00, 0xCD.toByte())
+            RomInstance.getRom()?.writeToMemory(0x00, 0xCD.toByte())
         }
     }
 

@@ -1,12 +1,12 @@
 package com.emulator
 
 // Singleton object to manage the screen
-object ScreenManager {
-    val screen = Screen() // Initialize the screen instance
+object DisplayInstance {
+    val display = Display() // Initialize the screen instance
 }
 
 // Class representing the screen and its buffer
-class Screen {
+class Display {
     companion object {
         // Width of the screen buffer
         const val BUFFER_WIDTH = 8
@@ -17,7 +17,7 @@ class Screen {
     // Byte array representing the screen buffer
     val buffer: ByteArray = ByteArray(BUFFER_WIDTH * BUFFER_HEIGHT)
 
-    fun display() {
+    private fun display() {
         for (row in 0 until BUFFER_HEIGHT) {
             for (col in 0 until BUFFER_WIDTH) {
                 // Calculate the index in the buffer for the current row and column

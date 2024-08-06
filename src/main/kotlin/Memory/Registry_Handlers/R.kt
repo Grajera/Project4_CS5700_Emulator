@@ -1,6 +1,6 @@
 package Memory.Registry_Handlers
 
-object RRegisterManager {
+object RRegisterInstance {
     // Create an array of 8 R registers
     val r = Array(8) { R() }
 }

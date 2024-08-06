@@ -1,8 +1,8 @@
 package Instructions
 
-import com.emulator.ScreenManager.screen
+import com.emulator.DisplayInstance.display
 import Memory.Registry_Handlers.R
-import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.RRegisterInstance.r
 
 class DrawInstruction(
     nibbles: ByteArray
@@ -20,6 +20,6 @@ class DrawInstruction(
         val asciiValue = registerX.readRegister()[0].toInt()
         require(asciiValue in 0..0x7F) { "ASCII value in registerX must be between 0x00 and 0x7F." }
 
-        screen.draw(asciiValue.toByte(), row, col)
+        display.draw(asciiValue.toByte(), row, col)
     }
 }

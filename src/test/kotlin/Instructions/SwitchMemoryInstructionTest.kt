@@ -1,5 +1,5 @@
 import Instructions.SwitchMemoryInstruction
-import Memory.Registry_Handlers.MRegisterManager.m
+import Memory.Registry_Handlers.MRegisterInstance.m
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

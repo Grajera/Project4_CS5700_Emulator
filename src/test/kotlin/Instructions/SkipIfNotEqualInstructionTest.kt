@@ -1,7 +1,7 @@
 import Instructions.SkipIfNotEqualInstruction
-import Memory.Registry_Handlers.PRegisterManager
-import Memory.Registry_Handlers.RRegisterManager
-import com.emulator.byteArrayToInt
+import Memory.Registry_Handlers.PRegisterInstance
+import Memory.Registry_Handlers.RRegisterInstance
+import com.emulator.Utils.byteArrayToInteger
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,47 +17,47 @@ class SkipIfNotEqualInstructionTest {
         instruction = SkipIfNotEqualInstruction(nibbles)
 
         // Set initial values in the registers for testing
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(5)) // Register X value
-        RRegisterManager.r[1].operateOnRegister(byteArrayOf(10)) // Register Y value
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(5)) // Register X value
+        RRegisterInstance.r[1].operateOnRegister(byteArrayOf(10)) // Register Y value
     }
 
     @Test
     fun testSkipNextInstructionWhenRegistersNotEqual() {
         instruction.runTask() // Perform the instruction
-        val currentPC = PRegisterManager.p.readRegister()
+        val currentPC = PRegisterInstance.p.readRegister()
 
         instruction.incrementProgramCounter() // Increment program counter based on comparison
 
-        val expectedPC = byteArrayToInt(currentPC) + 4 // Expecting to skip next instruction
-        assertEquals(expectedPC, byteArrayToInt(PRegisterManager.p.readRegister()))
+        val expectedPC = byteArrayToInteger(currentPC) + 4 // Expecting to skip next instruction
+        assertEquals(expectedPC, byteArrayToInteger(PRegisterInstance.p.readRegister()))
     }
 
     @Test
     fun testDoNotSkipNextInstructionWhenRegistersEqual() {
         // Change register Y to be equal to register X
-        RRegisterManager.r[1].operateOnRegister(byteArrayOf(5)) // Set register Y value to 5
+        RRegisterInstance.r[1].operateOnRegister(byteArrayOf(5)) // Set register Y value to 5
 
         instruction.runTask() // Perform the instruction
-        val currentPC = PRegisterManager.p.readRegister()
+        val currentPC = PRegisterInstance.p.readRegister()
 
         instruction.incrementProgramCounter() // Increment program counter based on comparison
 
-        val expectedPC = byteArrayToInt(currentPC) + 2 // Expecting not to skip next instruction
-        assertEquals(expectedPC, byteArrayToInt(PRegisterManager.p.readRegister()))
+        val expectedPC = byteArrayToInteger(currentPC) + 2 // Expecting not to skip next instruction
+        assertEquals(expectedPC, byteArrayToInteger(PRegisterInstance.p.readRegister()))
     }
 
     @Test
     fun testSkipNextInstructionHandlesEmptyRegisters() {
         // Clear the registers to simulate an empty state
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(0)) // Set register X value to 0
-        RRegisterManager.r[1].operateOnRegister(byteArrayOf(0)) // Set register Y value to 0
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(0)) // Set register X value to 0
+        RRegisterInstance.r[1].operateOnRegister(byteArrayOf(0)) // Set register Y value to 0
 
         instruction.runTask() // Perform the instruction
-        val currentPC = PRegisterManager.p.readRegister()
+        val currentPC = PRegisterInstance.p.readRegister()
 
         instruction.incrementProgramCounter() // Increment program counter based on comparison
 
-        val expectedPC = byteArrayToInt(currentPC) + 2 // Expecting not to skip next instruction
-        assertEquals(expectedPC, byteArrayToInt(PRegisterManager.p.readRegister()))
+        val expectedPC = byteArrayToInteger(currentPC) + 2 // Expecting not to skip next instruction
+        assertEquals(expectedPC, byteArrayToInteger(PRegisterInstance.p.readRegister()))
     }
 }

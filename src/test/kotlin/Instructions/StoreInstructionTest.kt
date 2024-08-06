@@ -1,6 +1,6 @@
 import Instructions.StoreInstruction
 import Memory.Registry_Handlers.R
-import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.RRegisterInstance.r
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

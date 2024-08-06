@@ -1,5 +1,5 @@
 import Instructions.SetARegisterInstruction
-import Memory.Registry_Handlers.ARegisterManager.a
+import Memory.Registry_Handlers.ARegisterInstance.a
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

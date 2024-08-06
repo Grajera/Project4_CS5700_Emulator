@@ -1,7 +1,7 @@
 package Instructions
 
 import Memory.Registry_Handlers.R
-import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.RRegisterInstance.r
 
 class SubtractInstruction(
     nibbles: ByteArray
@@ -21,7 +21,6 @@ class SubtractInstruction(
         val valueY = registerY.readRegister()[0].toInt()
 
         // Store the result in the result register
-        val result = (valueX - valueY).toByte()
-        registerZ.operateOnRegister(byteArrayOf(result))
+        registerZ.operateOnRegister(byteArrayOf((valueX - valueY).toByte()))
     }
 }

@@ -2,7 +2,7 @@ package Memory
 
 import java.lang.IllegalStateException
 
-object RomManager {
+object RomInstance {
     private var rom: ROM? = null // Holds the initialized ROM instance
 
     // Initializes the ROM with the provided byte array
@@ -14,12 +14,14 @@ object RomManager {
     fun getRom(): ROM? = rom
 }
 
+// ROM class representing read-only memory
 class ROM(bytes: ByteArray) : PrimaryMemory(bytes) {
+
     // Reads a byte from the specified address in the ROM
-    override fun read(address: Int): Byte = memoryValues[address]
+    override fun read(memoryLocation: Int): Byte = memoryValues[memoryLocation]
 
     // Prevents writing to ROM
-    override fun writeToMemory(address: Int, byte: Byte) {
+    override fun writeToMemory(memoryLocation: Int, byte: Byte) {
         throw IllegalStateException("Cannot write to Read Only Memory")
     }
 }

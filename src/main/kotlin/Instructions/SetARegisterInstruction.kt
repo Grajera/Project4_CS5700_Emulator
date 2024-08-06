@@ -1,7 +1,7 @@
 package Instructions
 
-import com.emulator.intToByteArray
-import Memory.Registry_Handlers.ARegisterManager.a
+import com.emulator.Utils.integerToByteArray
+import Memory.Registry_Handlers.ARegisterInstance.a
 
 class SetARegisterInstruction(
     nibbles: ByteArray
@@ -16,6 +16,6 @@ class SetARegisterInstruction(
         require(address in 0..0xFFF) { "Address must be between 0 and 4095." }
 
         // Set the A register with the calculated address
-        a.operateOnRegister(intToByteArray(address))
+        a.operateOnRegister(integerToByteArray(address))
     }
 }

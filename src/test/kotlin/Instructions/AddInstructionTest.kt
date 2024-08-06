@@ -1,6 +1,6 @@
 package Instructions
 
-import Memory.Registry_Handlers.RRegisterManager
+import Memory.Registry_Handlers.RRegisterInstance
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -16,8 +16,8 @@ class AddInstructionTest {
         instruction = AddInstruction(nibbles)
 
         // Set initial values in registers for testing
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(10)) // Register X
-        RRegisterManager.r[1].operateOnRegister(byteArrayOf(20)) // Register Y
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(10)) // Register X
+        RRegisterInstance.r[1].operateOnRegister(byteArrayOf(20)) // Register Y
     }
 
     @Test
@@ -25,7 +25,7 @@ class AddInstructionTest {
         instruction.runTask() // Perform the addition
 
         // Read the result from the result register
-        val result = RRegisterManager.r[2].readRegister()[0].toInt()
+        val result = RRegisterInstance.r[2].readRegister()[0].toInt()
 
         // Check that the result is the sum of the two registers
         assertEquals(30, result) // 10 + 20 = 30
@@ -34,13 +34,13 @@ class AddInstructionTest {
     @Test
     fun testAddWithNegativeResult() {
         // Set values to produce a negative result
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(10)) // Register X
-        RRegisterManager.r[1].operateOnRegister(byteArrayOf(-15)) // Register Y
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(10)) // Register X
+        RRegisterInstance.r[1].operateOnRegister(byteArrayOf(-15)) // Register Y
 
         instruction.runTask() // Perform the addition
 
         // Read the result from the result register
-        val result = RRegisterManager.r[2].readRegister()[0].toInt()
+        val result = RRegisterInstance.r[2].readRegister()[0].toInt()
 
         // Check that the result is correctly stored
         assertEquals(-5, result) // 10 + (-15) = -5
@@ -49,13 +49,13 @@ class AddInstructionTest {
     @Test
     fun testAddWithZero() {
         // Add zero to a number
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(10)) // Register X
-        RRegisterManager.r[1].operateOnRegister(byteArrayOf(0)) // Register Y
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(10)) // Register X
+        RRegisterInstance.r[1].operateOnRegister(byteArrayOf(0)) // Register Y
 
         instruction.runTask() // Perform the addition
 
         // Read the result from the result register
-        val result = RRegisterManager.r[2].readRegister()[0].toInt()
+        val result = RRegisterInstance.r[2].readRegister()[0].toInt()
 
         // Check that the result is unchanged
         assertEquals(10, result) // 10 + 0 = 10

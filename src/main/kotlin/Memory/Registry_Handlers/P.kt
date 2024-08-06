@@ -1,8 +1,8 @@
 package Memory.Registry_Handlers
 
-import com.emulator.byteArrayToInt
+import com.emulator.Utils.byteArrayToInteger
 
-object PRegisterManager {
+object PRegisterInstance {
     // Initialize an instance of the P register
     val p = P()
 }
@@ -16,7 +16,7 @@ class P : Register(ByteArray(2)) {
         require(inputValues.size == 2) { "ByteArray must be of size 2." }
 
         // Convert the byte array to an integer and ensure it is divisible by 2
-        val intValue = byteArrayToInt(inputValues)
+        val intValue = byteArrayToInteger(inputValues)
         require(intValue % 2 == 0) { "Integer value must be divisible by 2." }
 
         // Copy the bytes from the input array to the P register's byte array

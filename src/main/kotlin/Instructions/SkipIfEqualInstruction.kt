@@ -1,10 +1,10 @@
 package Instructions
 
-import com.emulator.byteArrayToInt
-import com.emulator.intToByteArray
-import Memory.Registry_Handlers.PRegisterManager.p
+import com.emulator.Utils.byteArrayToInteger
+import com.emulator.Utils.integerToByteArray
+import Memory.Registry_Handlers.PRegisterInstance.p
 import Memory.Registry_Handlers.R
-import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.RRegisterInstance.r
 
 class SkipIfEqualInstruction(
     nibbles: ByteArray
@@ -23,10 +23,8 @@ class SkipIfEqualInstruction(
     }
 
     public override fun incrementProgramCounter() {
-        val currentP = byteArrayToInt(p.readRegister())
-        println("shouldSkipNextInstruction")
-        println(shouldSkipNextInstruction)
+        val currentP = byteArrayToInteger(p.readRegister())
         val offset = if (shouldSkipNextInstruction) 4 else 2
-        p.operateOnRegister(intToByteArray(currentP + offset))
+        p.operateOnRegister(integerToByteArray(currentP + offset))
     }
 }

@@ -1,8 +1,8 @@
 import Instructions.WriteInstruction
-import Memory.Registry_Handlers.ARegisterManager.a
-import Memory.Registry_Handlers.MRegisterManager.m
-import Memory.Registry_Handlers.RRegisterManager.r
-import Memory.RamManager.RAM
+import Memory.Registry_Handlers.ARegisterInstance.a
+import Memory.Registry_Handlers.MRegisterInstance.m
+import Memory.Registry_Handlers.RRegisterInstance.r
+import Memory.RamInstance.RAM
 import Memory.Registry_Handlers.R
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

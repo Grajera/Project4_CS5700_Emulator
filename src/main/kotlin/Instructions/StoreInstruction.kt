@@ -1,8 +1,8 @@
 package Instructions
 
 import Memory.Registry_Handlers.R
-import Memory.Registry_Handlers.RRegisterManager.r
-import com.emulator.mergeNibblesToByte
+import Memory.Registry_Handlers.RRegisterInstance.r
+import com.emulator.Utils.mergeNibblesToByte
 
 class StoreInstruction(
     nibbles: ByteArray

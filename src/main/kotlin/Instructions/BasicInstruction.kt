@@ -1,8 +1,8 @@
 package Instructions
 
-import com.emulator.byteArrayToInt
-import com.emulator.intToByteArray
-import Memory.Registry_Handlers.PRegisterManager.p
+import com.emulator.Utils.byteArrayToInteger
+import com.emulator.Utils.integerToByteArray
+import Memory.Registry_Handlers.PRegisterInstance.p
 
 abstract class BasicInstruction(
     protected val nibbles: ByteArray
@@ -19,7 +19,7 @@ abstract class BasicInstruction(
 
     // Increment the program counter by 2
     protected open fun incrementProgramCounter() {
-        p.operateOnRegister(intToByteArray(byteArrayToInt(p.readRegister()) + 2))
+        p.operateOnRegister(integerToByteArray(byteArrayToInteger(p.readRegister()) + 2))
     }
 
     // Abstract method to be implemented by subclasses

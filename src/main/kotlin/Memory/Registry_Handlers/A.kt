@@ -1,16 +1,16 @@
 package Memory.Registry_Handlers
 
-object ARegisterManager {
-    val a = A() // Initialize an instance of the A register
+object ARegisterInstance {
+    // Initialize an instance of the A register
+    val a = A()
 }
-// Initialize a byte array of size 2 for the A register
+
+// Represents the A register
 class A : Register(ByteArray(2)) {
 
-    // Writes a byte array to the A register from the provided ByteArray
+    // Writes a byte array to the A register
     override fun writeToRegister(inputValues: ByteArray) {
-        require(inputValues.size == 2) { "registerValues must have 2 values" }
-        // Directly assign the bytes from the input array to the A register's byte array
-        this.memoryValues[0] = inputValues[0]
-        this.memoryValues[1] = inputValues[1]
+        require(inputValues.size == 2) { "A register must have exactly 2 values." }
+        System.arraycopy(inputValues, 0, this.memoryValues, 0, 2)
     }
 }

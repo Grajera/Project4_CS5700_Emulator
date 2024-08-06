@@ -2,18 +2,16 @@ package com.emulator
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 import kotlin.test.BeforeTest
 import kotlin.test.assertFailsWith
 
-class ScreenTest {
-    lateinit var screen: Screen
+class DisplayTest {
+    lateinit var display: Display
 
     @BeforeTest
     fun setUp() {
         // Initialize the Screen instance
-        screen = Screen()
+        display = Display()
     }
 
     @Test
@@ -23,10 +21,10 @@ class ScreenTest {
         val col = 2.toByte() // Column index
 
         // Draw the byte at the specified position
-        screen.draw(byteToDraw, row, col)
+        display.draw(byteToDraw, row, col)
 
         // Read the value from the screen buffer at the specified position
-        val drawnValue = screen.buffer[row.toInt() * Screen.BUFFER_WIDTH + col.toInt()]
+        val drawnValue = display.buffer[row.toInt() * Display.BUFFER_WIDTH + col.toInt()]
 
         // Verify that the drawn value matches the expected byte
         assertEquals(byteToDraw, drawnValue)
@@ -40,15 +38,15 @@ class ScreenTest {
 
         // Verify that drawing out of bounds throws an exception
         assertFailsWith<IllegalArgumentException> {
-            screen.draw(byteToDraw, row, col)
+            display.draw(byteToDraw, row, col)
         }
     }
 
     @Test
     fun testInitialBufferValues() {
         // Verify that all initial values in the buffer are 0
-        for (i in screen.buffer.indices) {
-            assertEquals(0.toByte(), screen.buffer[i])
+        for (i in display.buffer.indices) {
+            assertEquals(0.toByte(), display.buffer[i])
         }
     }
 }

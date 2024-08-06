@@ -1,6 +1,6 @@
 package Instructions
 
-import Memory.Registry_Handlers.RRegisterManager
+import Memory.Registry_Handlers.RRegisterInstance
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,16 +17,16 @@ class ConvertByteToAsciiInstructionTest {
         instruction = ConvertByteToAsciiInstruction(nibbles)
 
         // Set a valid ASCII byte in the R register for testing
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(65)) // 'A' in ASCII
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(65)) // 'A' in ASCII
     }
 
     @Test
     fun testConvertByteToAscii() {
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(0x01))
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(0x01))
         instruction.runTask() // Perform the conversion
 
         // Read the converted ASCII value from the register
-        val result = RRegisterManager.r[0].readRegister()[0].toInt()
+        val result = RRegisterInstance.r[0].readRegister()[0].toInt()
 
         // Check that the result is the correct ASCII value for '0'
         assertEquals(49, result) // ASCII value for '0'
@@ -35,7 +35,7 @@ class ConvertByteToAsciiInstructionTest {
     @Test
     fun testConvertInvalidByteToAscii() {
         // Set an invalid ASCII value (greater than 127)
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(200.toByte())) // Out of ASCII range
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(200.toByte())) // Out of ASCII range
 
         // Execute the conversion and expect an exception
         val exception = assertThrows(IllegalArgumentException::class.java) {
@@ -49,7 +49,7 @@ class ConvertByteToAsciiInstructionTest {
     @Test
     fun testConvertByteToAsciiHandlesNegativeValue() {
         // Set a negative value (if applicable)
-        RRegisterManager.r[0].operateOnRegister(byteArrayOf(-1)) // Assuming -1 is represented as 255 in a byte
+        RRegisterInstance.r[0].operateOnRegister(byteArrayOf(-1)) // Assuming -1 is represented as 255 in a byte
 
         // Execute the conversion and expect an exception
         val exception = assertThrows(IllegalArgumentException::class.java) {

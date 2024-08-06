@@ -1,7 +1,7 @@
 import Instructions.JumpInstruction
-import Memory.Registry_Handlers.PRegisterManager.p
-import com.emulator.byteArrayToInt
-import com.emulator.intToByteArray
+import Memory.Registry_Handlers.PRegisterInstance.p
+import com.emulator.Utils.byteArrayToInteger
+import com.emulator.Utils.integerToByteArray
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
@@ -21,7 +21,7 @@ class JumpInstructionTest {
     fun testPerformInstruction() {
         instruction.runTask()
 
-        val expectedPC = intToByteArray(0x0012) // Expected address calculated from nibbles
+        val expectedPC = integerToByteArray(0x0012) // Expected address calculated from nibbles
 
         assertContentEquals(expectedPC, p.readRegister(), "Program counter should be set correctly.")
     }
@@ -29,8 +29,8 @@ class JumpInstructionTest {
     @Test
     fun testIncrementProgramCounter() {
         instruction.incrementProgramCounter() //should do nothing.
-        val initialPC = byteArrayToInt(p.readRegister())
+        val initialPC = byteArrayToInteger(p.readRegister())
         instruction.incrementProgramCounter() //should do nothing.
-        assertEquals(initialPC, byteArrayToInt(p.readRegister()))
+        assertEquals(initialPC, byteArrayToInteger(p.readRegister()))
     }
 }

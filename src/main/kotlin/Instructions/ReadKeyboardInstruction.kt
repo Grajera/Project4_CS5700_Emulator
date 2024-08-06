@@ -2,7 +2,7 @@ package Instructions
 
 import com.emulator.Clock
 import Memory.Registry_Handlers.R
-import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.RRegisterInstance.r
 
 class ReadKeyboardInstruction(
     nibbles: ByteArray

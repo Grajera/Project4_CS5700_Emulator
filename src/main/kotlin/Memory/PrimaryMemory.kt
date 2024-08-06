@@ -1,8 +1,9 @@
 package Memory
 
+// Abstract class representing primary memory
 abstract class PrimaryMemory(
-    bytes: ByteArray
-): Memory(bytes) {
-    abstract fun read(address: Int): Byte
-    abstract fun writeToMemory(address: Int, byte: Byte)
+    inputValues: ByteArray
+) : Memory(inputValues) {
+    abstract fun read(memoryLocation: Int): Byte
+    abstract fun writeToMemory(memoryLocation: Int, byte: Byte)
 }

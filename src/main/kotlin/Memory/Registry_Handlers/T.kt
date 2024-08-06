@@ -1,6 +1,6 @@
 package Memory.Registry_Handlers
 
-object TRegisterManager {
+object TRegisterInstance {
     val t = T() // Initialize an instance of the T register
 }
 

@@ -1,8 +1,8 @@
 import Instructions.SkipIfEqualInstruction
-import Memory.Registry_Handlers.PRegisterManager.p
-import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.PRegisterInstance.p
+import Memory.Registry_Handlers.RRegisterInstance.r
 import Memory.Registry_Handlers.R
-import com.emulator.byteArrayToInt
+import com.emulator.Utils.byteArrayToInteger
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -30,7 +30,7 @@ class SkipIfEqualInstructionTest {
         instruction.incrementProgramCounter()
 
         val currentPBytes = p.readRegister()
-        assertEquals(currentPBytes[0] + 6, byteArrayToInt(p.readRegister()), "The program counter should be incremented by 4 when registers are equal.")
+        assertEquals(currentPBytes[0] + 6, byteArrayToInteger(p.readRegister()), "The program counter should be incremented by 4 when registers are equal.")
     }
 
     @Test
@@ -40,6 +40,6 @@ class SkipIfEqualInstructionTest {
         instruction.incrementProgramCounter()
 
         val currentPBytes = p.readRegister()
-        assertEquals(currentPBytes[0] + 2, byteArrayToInt(p.readRegister()), "The program counter should be incremented by 2 when registers are not equal.")
+        assertEquals(currentPBytes[0] + 2, byteArrayToInteger(p.readRegister()), "The program counter should be incremented by 2 when registers are not equal.")
     }
 }

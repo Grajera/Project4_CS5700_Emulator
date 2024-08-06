@@ -1,7 +1,7 @@
 package Instructions
 
 import Memory.Registry_Handlers.R
-import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.RRegisterInstance.r
 
 class ConvertByteToAsciiInstruction(
     nibbles: ByteArray

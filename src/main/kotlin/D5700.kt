@@ -1,7 +1,7 @@
 package com.emulator
 
 import Memory.ROM
-import Memory.RomManager
+import Memory.RomInstance
 import java.io.File
 import java.io.IOException
 
@@ -42,8 +42,8 @@ class D5700 {
         // Ensure memory size is 4096 bytes
         val memory = file.copyOf(4096)
         // Initialize the ROM with the memory
-        RomManager.initializeRom(memory)
+        RomInstance.initializeRom(memory)
         // Get the ROM or throw an error
-        return RomManager.getRom() ?: throw IOException("Failed to initialize ROM")
+        return RomInstance.getRom() ?: throw IOException("Failed to initialize ROM")
     }
 }

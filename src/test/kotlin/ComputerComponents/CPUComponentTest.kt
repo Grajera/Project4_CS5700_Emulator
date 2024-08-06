@@ -1,8 +1,8 @@
 package com.emulator
 
 import Memory.ROM
-import Memory.RomManager
-import Memory.Registry_Handlers.TRegisterManager.t
+import Memory.RomInstance
+import Memory.Registry_Handlers.TRegisterInstance.t
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,8 +17,8 @@ class CPUComponentTest {
         // Initialize the CPU and a mock ROM with sample instructions
         cpu = CPU()
         val mockRomData = byteArrayOf(0x00, 0x01, 0x02, 0x00) // Replace with your instruction bytes
-        RomManager.initializeRom(mockRomData)
-        rom = RomManager.getRom()!!
+        RomInstance.initializeRom(mockRomData)
+        rom = RomInstance.getRom()!!
     }
 
     @Test
@@ -47,8 +47,8 @@ class CPUComponentTest {
     fun testShutDownOnZeroBytes() {
         // Create ROM with zero bytes to test shutdown behavior
         val mockRomData = byteArrayOf(0x00, 0x00)
-        RomManager.initializeRom(mockRomData)
-        rom = RomManager.getRom()!!
+        RomInstance.initializeRom(mockRomData)
+        rom = RomInstance.getRom()!!
 
         // Start execution in a separate thread
         val executionThread = thread {

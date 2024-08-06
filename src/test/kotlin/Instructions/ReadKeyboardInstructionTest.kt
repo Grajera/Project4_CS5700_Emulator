@@ -1,5 +1,5 @@
 import Instructions.ReadKeyboardInstruction
-import Memory.Registry_Handlers.RRegisterManager.r
+import Memory.Registry_Handlers.RRegisterInstance.r
 import Memory.Registry_Handlers.R
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
