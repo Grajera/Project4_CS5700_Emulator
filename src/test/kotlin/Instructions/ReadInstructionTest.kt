@@ -23,7 +23,7 @@ class ReadInstructionTest {
         // Prepare initial state
         m.operateOnRegister(byteArrayOf(0)) // Use RAM mode
         a.operateOnRegister(byteArrayOf(0x00, 0x00)) // Set address in A register
-        RAM.writeToMemory(0x00, 0xAB.toByte()) // Write value to RAM
+        RAM.writeToMemoryLocation(0x00, 0xAB.toByte()) // Write value to RAM
     }
 
     @Test
@@ -36,10 +36,10 @@ class ReadInstructionTest {
     fun testPerformInstruction_ReadFromROM() {
         // Switch to ROM mode and set a value in ROM
         m.operateOnRegister(byteArrayOf(1)) // Switch to ROM mode
-        RomInstance.initializeRom(byteArrayOf(0xFF.toByte())) // Ensure ROM is initialized
+        RomInstance.loadDataIntoRom(byteArrayOf(0xFF.toByte())) // Ensure ROM is initialized
         assertFailsWith<IllegalStateException> {
             // Cannot Write value to ROM}
-            RomInstance.getRom()?.writeToMemory(0x00, 0xCD.toByte())
+            RomInstance.getRom()?.writeToMemoryLocation(0x00, 0xCD.toByte())
         }
     }
 

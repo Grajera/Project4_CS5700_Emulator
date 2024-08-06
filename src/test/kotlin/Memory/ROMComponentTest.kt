@@ -20,7 +20,7 @@ class ROMComponentTest {
         val expectedValue = address.toByte() // The expected value at that address
 
         // Read the value back from ROM
-        val readValue = rom.read(address)
+        val readValue = rom.readMemoryAddress(address)
 
         // Verify that the read value matches the expected value
         assertEquals(expectedValue, readValue)
@@ -32,7 +32,7 @@ class ROMComponentTest {
 
         // Verify that reading from an invalid address throws an exception
         assertFailsWith<IndexOutOfBoundsException> {
-            rom.read(invalidAddress)
+            rom.readMemoryAddress(invalidAddress)
         }
     }
 
@@ -42,7 +42,7 @@ class ROMComponentTest {
 
         // Verify that writing to ROM throws an exception
         assertFailsWith<IllegalStateException> {
-            rom.writeToMemory(address, 0x00)
+            rom.writeToMemoryLocation(address, 0x00)
         }
     }
 
@@ -52,7 +52,7 @@ class ROMComponentTest {
 
         // Verify that writing to an out-of-bounds address throws an exception
         assertFailsWith<IllegalStateException> {
-            rom.writeToMemory(outOfBoundsAddress, 0x00)
+            rom.writeToMemoryLocation(outOfBoundsAddress, 0x00)
         }
     }
 
@@ -62,7 +62,7 @@ class ROMComponentTest {
         val expectedValue = (romSize - 1).toByte() // The expected value at that address
 
         // Read the value back from ROM
-        val readValue = rom.read(address)
+        val readValue = rom.readMemoryAddress(address)
 
         // Verify that the read value matches the expected value
         assertEquals(expectedValue, readValue)

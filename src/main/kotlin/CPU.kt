@@ -27,10 +27,7 @@ object Clock {
     }
 }
 
-class CPU(
-    private val instructionSpeed: Long = 2L,
-    private val timerSpeed: Long = 16L
-) {
+class CPU {
     private val executor = Executors.newSingleThreadScheduledExecutor()
     private val instructionFactory = CPUInstructionsFactory()
     private var rom: ROM? = null
@@ -62,7 +59,7 @@ class CPU(
     }
 
     // Runnable to manage timer updates
-    private val timer = Runnable {
+    private val clock = Runnable {
         if (!Clock.isPaused()) {
             try {
                 val currentT = t.readRegister()[0].toInt()
@@ -80,7 +77,7 @@ class CPU(
         this.rom = rom
         try {
         executor.scheduleAtFixedRate(cpu, 0, 2L, TimeUnit.MILLISECONDS).get()
-        executor.scheduleAtFixedRate(timer, 0, 16L, TimeUnit.MILLISECONDS).get()
+        executor.scheduleAtFixedRate(clock, 0, 16L, TimeUnit.MILLISECONDS).get()
         } catch (e: Exception) {
             // end of execution.
         }
@@ -92,8 +89,8 @@ class CPU(
     private fun readNextPairInByteArray(): ByteArray {
         return try {
             val pc = byteArrayToInteger(p.readRegister())
-            val byte1 = rom?.read(pc) ?: 0
-            val byte2 = rom?.read(pc + 1) ?: 0
+            val byte1 = rom?.readMemoryAddress(pc) ?: 0
+            val byte2 = rom?.readMemoryAddress(pc + 1) ?: 0
             byteArrayOf(byte1, byte2)
         } catch (e: Exception) {
             println("Exception while reading next instruction: ${e.message}")

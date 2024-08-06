@@ -34,7 +34,7 @@ class D5700 {
 
     // Converts the binary data into a ROM object
     private fun loadFileIntoMemory(file: ByteArray): ROM {
-        RomInstance.initializeRom(file) // Initialize ROM with memory
+        RomInstance.loadDataIntoRom(file) // Initialize ROM with memory
         return RomInstance.getRom() ?: throw UninitializedPropertyAccessException("Failed to get instance of ROM")
     }
 }

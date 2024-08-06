@@ -8,10 +8,10 @@ object RamInstance {
 class RAM : PhysicalMemoryType(ByteArray(4096)) { // 4096 bytes for RAM
 
     // Reads a byte from the specified address
-    override fun read(memoryLocation: Int): Byte = memoryValues[memoryLocation]
+    override fun readMemoryAddress(memoryLocation: Int): Byte = memoryValues[memoryLocation]
 
     // Writes a byte to the specified address
-    override fun writeToMemory(memoryLocation: Int, byte: Byte) {
+    override fun writeToMemoryLocation(memoryLocation: Int, byte: Byte) {
         memoryValues[memoryLocation] = byte // Store the byte at the address
     }
 }

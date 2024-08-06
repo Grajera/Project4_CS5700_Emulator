@@ -28,9 +28,9 @@ class JumpInstructionTest {
 
     @Test
     fun testIncrementProgramCounter() {
-        instruction.incrementProgramCounter() //should do nothing.
+        instruction.updateProgramCounter() //should do nothing.
         val initialPC = byteArrayToInteger(p.readRegister())
-        instruction.incrementProgramCounter() //should do nothing.
+        instruction.updateProgramCounter() //should do nothing.
         assertEquals(initialPC, byteArrayToInteger(p.readRegister()))
     }
 }

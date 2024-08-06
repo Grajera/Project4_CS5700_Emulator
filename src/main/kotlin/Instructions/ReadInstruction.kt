@@ -20,9 +20,9 @@ class ReadInstruction(
         val address = byteArrayToInteger(a.readRegister())
 
         val value = if (m.readRegister()[0].toInt() != 0) {
-            RomInstance.getRom()?.read(address) ?: throw IllegalStateException("ROM is not initialized.")
+            RomInstance.getRom()?.readMemoryAddress(address) ?: throw IllegalStateException("ROM is not initialized.")
         } else {
-            RAM.read(address)
+            RAM.readMemoryAddress(address)
         }
 
         registerX.operateOnRegister(byteArrayOf(value))

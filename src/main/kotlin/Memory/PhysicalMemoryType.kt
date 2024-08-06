@@ -4,6 +4,6 @@ package Memory
 abstract class PhysicalMemoryType(
     inputValues: ByteArray
 ) : Memory(inputValues) {
-    abstract fun read(memoryLocation: Int): Byte
-    abstract fun writeToMemory(memoryLocation: Int, byte: Byte)
+    abstract fun readMemoryAddress(memoryLocation: Int): Byte
+    abstract fun writeToMemoryLocation(memoryLocation: Int, byte: Byte)
 }

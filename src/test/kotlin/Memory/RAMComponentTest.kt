@@ -1,7 +1,6 @@
 package Memory
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
@@ -16,10 +15,10 @@ class RAMComponentTest {
         val valueToWrite = 0xAB.toByte()
 
         // Write the value to RAM
-        ram.writeToMemory(address, valueToWrite)
+        ram.writeToMemoryLocation(address, valueToWrite)
 
         // Read the value back from RAM
-        val readValue = ram.read(address)
+        val readValue = ram.readMemoryAddress(address)
 
         // Verify that the written value matches the read value
         assertEquals(valueToWrite, readValue)
@@ -29,7 +28,7 @@ class RAMComponentTest {
     fun testWriteInvalidAddress() {
         // Verify that writing to an invalid address throws an exception
         assertFailsWith<IndexOutOfBoundsException> {
-            ram.writeToMemory(ramSize, 0x00)
+            ram.writeToMemoryLocation(ramSize, 0x00)
         }
     }
 
@@ -37,7 +36,7 @@ class RAMComponentTest {
     fun testReadInvalidAddress() {
         // Verify that reading from an invalid address throws an exception
         assertFailsWith<IndexOutOfBoundsException> {
-            ram.read(ramSize)
+            ram.readMemoryAddress(ramSize)
         }
     }
 
@@ -47,10 +46,10 @@ class RAMComponentTest {
         val valueToWrite = 0xCD.toByte()
 
         // Write the value to the last valid address
-        ram.writeToMemory(address, valueToWrite)
+        ram.writeToMemoryLocation(address, valueToWrite)
 
         // Read the value back from the last valid address
-        val readValue = ram.read(address)
+        val readValue = ram.readMemoryAddress(address)
 
         // Verify that the written value matches the read value
         assertEquals(valueToWrite, readValue)
@@ -62,7 +61,7 @@ class RAMComponentTest {
 
         // Verify that writing to an out-of-bounds address throws an exception
         assertFailsWith<IndexOutOfBoundsException> {
-            ram.writeToMemory(outOfBoundsAddress, 0x00)
+            ram.writeToMemoryLocation(outOfBoundsAddress, 0x00)
         }
     }
 
@@ -72,7 +71,7 @@ class RAMComponentTest {
 
         // Verify that reading from an out-of-bounds address throws an exception
         assertFailsWith<IndexOutOfBoundsException>{
-            ram.read(outOfBoundsAddress)
+            ram.readMemoryAddress(outOfBoundsAddress)
         }
     }
 }

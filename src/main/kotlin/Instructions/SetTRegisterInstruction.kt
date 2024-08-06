@@ -9,15 +9,15 @@ class SetTRegisterInstruction(
 ) : BasicInstruction(nibbles) {
 
     // Value to set in the T register
-    private var value: Byte = 0
+    private var tRegisterValue: Byte = 0
 
     // Performs the operation of setting the T register
     public override fun runTask() {
         // Combine high and low nibbles to form the value for the T register
-        value = mergeNibblesToByte(nibbles[1], nibbles[2])
+        tRegisterValue = mergeNibblesToByte(nibbles[1], nibbles[2])
 
         Clock.pauseTimer() // Pause operations
-        t.operateOnRegister(byteArrayOf(value)) // Set the T register value
+        t.operateOnRegister(byteArrayOf(tRegisterValue)) // Set the T register value
         Clock.resumeTimer() // Resume operations
     }
 }

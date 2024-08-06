@@ -14,11 +14,11 @@ abstract class BasicInstruction(
     // Execute the instruction: perform operation and update the program counter
     fun execute() {
         runTask()
-        incrementProgramCounter()
+        updateProgramCounter()
     }
 
     // Increment the program counter by 2
-    protected open fun incrementProgramCounter() {
+    protected open fun updateProgramCounter() {
         p.operateOnRegister(integerToByteArray(byteArrayToInteger(p.readRegister()) + 2))
     }
 

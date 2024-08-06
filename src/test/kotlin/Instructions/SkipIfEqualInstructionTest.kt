@@ -27,19 +27,19 @@ class SkipIfEqualInstructionTest {
     @Test
     fun testPerformInstruction_Skip() {
         instruction.runTask()
-        instruction.incrementProgramCounter()
+        instruction.updateProgramCounter()
 
         val currentPBytes = p.readRegister()
-        assertEquals(currentPBytes[0] + 6, byteArrayToInteger(p.readRegister()), "The program counter should be incremented by 4 when registers are equal.")
+        assertEquals(6, byteArrayToInteger(p.readRegister()), "The program counter should be incremented by 4 when registers are equal.")
     }
 
     @Test
     fun testPerformInstruction_NoSkip() {
         registerY.operateOnRegister(byteArrayOf(0x3)) // Change Y value
         instruction.runTask()
-        instruction.incrementProgramCounter()
+        instruction.updateProgramCounter()
 
         val currentPBytes = p.readRegister()
-        assertEquals(currentPBytes[0] + 2, byteArrayToInteger(p.readRegister()), "The program counter should be incremented by 2 when registers are not equal.")
+        assertEquals(2, byteArrayToInteger(p.readRegister()), "The program counter should be incremented by 2 when registers are not equal.")
     }
 }

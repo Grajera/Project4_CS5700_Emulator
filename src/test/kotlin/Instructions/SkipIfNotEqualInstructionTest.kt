@@ -26,7 +26,7 @@ class SkipIfNotEqualInstructionTest {
         instruction.runTask() // Perform the instruction
         val currentPC = PRegisterInstance.p.readRegister()
 
-        instruction.incrementProgramCounter() // Increment program counter based on comparison
+        instruction.updateProgramCounter() // Increment program counter based on comparison
 
         val expectedPC = byteArrayToInteger(currentPC) + 4 // Expecting to skip next instruction
         assertEquals(expectedPC, byteArrayToInteger(PRegisterInstance.p.readRegister()))
@@ -40,7 +40,7 @@ class SkipIfNotEqualInstructionTest {
         instruction.runTask() // Perform the instruction
         val currentPC = PRegisterInstance.p.readRegister()
 
-        instruction.incrementProgramCounter() // Increment program counter based on comparison
+        instruction.updateProgramCounter() // Increment program counter based on comparison
 
         val expectedPC = byteArrayToInteger(currentPC) + 2 // Expecting not to skip next instruction
         assertEquals(expectedPC, byteArrayToInteger(PRegisterInstance.p.readRegister()))
@@ -55,7 +55,7 @@ class SkipIfNotEqualInstructionTest {
         instruction.runTask() // Perform the instruction
         val currentPC = PRegisterInstance.p.readRegister()
 
-        instruction.incrementProgramCounter() // Increment program counter based on comparison
+        instruction.updateProgramCounter() // Increment program counter based on comparison
 
         val expectedPC = byteArrayToInteger(currentPC) + 2 // Expecting not to skip next instruction
         assertEquals(expectedPC, byteArrayToInteger(PRegisterInstance.p.readRegister()))

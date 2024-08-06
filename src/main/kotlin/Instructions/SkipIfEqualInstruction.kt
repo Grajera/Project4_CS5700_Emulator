@@ -22,7 +22,7 @@ class SkipIfEqualInstruction(
         shouldSkipNextInstruction = registerX.readRegister()[0].toInt() == registerY.readRegister()[0].toInt()
     }
 
-    public override fun incrementProgramCounter() {
+    public override fun updateProgramCounter() {
         val currentP = byteArrayToInteger(p.readRegister())
         val offset = if (shouldSkipNextInstruction) 4 else 2
         p.operateOnRegister(integerToByteArray(currentP + offset))

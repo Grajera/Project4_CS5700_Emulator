@@ -17,7 +17,7 @@ class JumpInstruction(
         p.operateOnRegister(newLocationInMemory)
     }
 
-    public override fun incrementProgramCounter() {
+    public override fun updateProgramCounter() {
         // Program counter is set directly by the address calculated in the previous step
     }
 }

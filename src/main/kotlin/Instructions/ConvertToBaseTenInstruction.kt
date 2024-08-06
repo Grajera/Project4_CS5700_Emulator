@@ -26,12 +26,12 @@ class ConvertToBaseTenInstruction(
         if (m.readRegister()[0].toInt() != 0) {
             RomInstance.getRom()?.let { rom ->
                 for (i in digits.indices) {
-                    rom.writeToMemory(address + i, digits[i].toByte())
+                    rom.writeToMemoryLocation(address + i, digits[i].toByte())
                 }
             } ?: throw IllegalStateException("ROM is not initialized.")
         } else {
             for (i in digits.indices) {
-                RAM.writeToMemory(address + i, digits[i].toByte())
+                RAM.writeToMemoryLocation(address + i, digits[i].toByte())
             }
         }
     }

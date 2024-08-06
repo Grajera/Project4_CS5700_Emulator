@@ -22,13 +22,13 @@ class WriteInstructionTest {
         registerX.operateOnRegister(byteArrayOf(0xAA.toByte())) // Set value to write
         a.operateOnRegister(byteArrayOf(0x00, 0x00)) // Address to write to
         m.operateOnRegister(byteArrayOf(0)) // Start in RAM mode
-        RAM.writeToMemory(0x00, 0x00) // Initialize RAM
+        RAM.writeToMemoryLocation(0x00, 0x00) // Initialize RAM
     }
 
     @Test
     fun testPerformInstruction_WriteToRAM() {
         instruction.runTask()
-        assertEquals(0xAA.toByte(), RAM.read(0x00), "The value should be written to RAM.")
+        assertEquals(0xAA.toByte(), RAM.readMemoryAddress(0x00), "The value should be written to RAM.")
     }
 
     @Test

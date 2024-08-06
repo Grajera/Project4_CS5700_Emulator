@@ -17,7 +17,7 @@ class CPUComponentTest {
         // Initialize the CPU and a mock ROM with sample instructions
         cpu = CPU()
         val mockRomData = byteArrayOf(0x00, 0x01, 0x02, 0x00) // Replace with your instruction bytes
-        RomInstance.initializeRom(mockRomData)
+        RomInstance.loadDataIntoRom(mockRomData)
         rom = RomInstance.getRom()!!
     }
 
@@ -47,7 +47,7 @@ class CPUComponentTest {
     fun testShutDownOnZeroBytes() {
         // Create ROM with zero bytes to test shutdown behavior
         val mockRomData = byteArrayOf(0x00, 0x00)
-        RomInstance.initializeRom(mockRomData)
+        RomInstance.loadDataIntoRom(mockRomData)
         rom = RomInstance.getRom()!!
 
         // Start execution in a separate thread

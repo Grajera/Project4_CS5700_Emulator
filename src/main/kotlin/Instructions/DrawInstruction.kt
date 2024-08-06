@@ -9,17 +9,13 @@ class DrawInstruction(
 ) : BasicInstruction(nibbles) {
 
     lateinit var registerX: R
-    private var row: Byte = 0
-    private var col: Byte = 0
 
     public override fun runTask() {
         registerX = r[nibbles[0].toInt()]
-        row = nibbles[1]
-        col = nibbles[2]
 
         val asciiValue = registerX.readRegister()[0].toInt()
         require(asciiValue in 0..0x7F) { "ASCII value in registerX must be between 0x00 and 0x7F." }
 
-        display.addToScreenBuffer(asciiValue.toByte(), row, col)
+        display.addToScreenBuffer(asciiValue.toByte(), nibbles[1], nibbles[2])
     }
 }

@@ -30,9 +30,9 @@ class WriteInstruction(
 
         // Write the value to ROM or RAM based on the M register's state
         if (m.readRegister()[0].toInt() != 0) {
-            RomInstance.getRom()?.writeToMemory(addressToWriteTo, valueToWriteOut) ?: throw IllegalStateException("ROM is not initialized.")
+            RomInstance.getRom()?.writeToMemoryLocation(addressToWriteTo, valueToWriteOut) ?: throw IllegalStateException("ROM is not initialized.")
         } else {
-            RAM.writeToMemory(addressToWriteTo, valueToWriteOut)
+            RAM.writeToMemoryLocation(addressToWriteTo, valueToWriteOut)
         }
     }
 }

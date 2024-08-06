@@ -7,8 +7,8 @@ class ConvertByteToAsciiInstruction(
     nibbles: ByteArray
 ) : BasicInstruction(nibbles) {
 
-    lateinit var sourceRegister: R
-    lateinit var targetRegister: R
+    private lateinit var sourceRegister: R
+    private lateinit var targetRegister: R
 
     public override fun runTask() {
         sourceRegister = r[nibbles[0].toInt()]

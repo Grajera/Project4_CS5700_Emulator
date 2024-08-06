@@ -6,7 +6,7 @@ object RomInstance {
     private var rom: ROM? = null // Holds the initialized ROM instance
 
     // Initializes the ROM with the provided byte array
-    fun initializeRom(bytes: ByteArray) {
+    fun loadDataIntoRom(bytes: ByteArray) {
         rom = ROM(bytes) // Create a new ROM instance
     }
 
@@ -18,10 +18,10 @@ object RomInstance {
 class ROM(bytes: ByteArray) : PhysicalMemoryType(bytes) {
 
     // Reads a byte from the specified address in the ROM
-    override fun read(memoryLocation: Int): Byte = memoryValues[memoryLocation]
+    override fun readMemoryAddress(memoryLocation: Int): Byte = memoryValues[memoryLocation]
 
     // Prevents writing to ROM
-    override fun writeToMemory(memoryLocation: Int, byte: Byte) {
+    override fun writeToMemoryLocation(memoryLocation: Int, byte: Byte) {
         throw IllegalStateException("Cannot write to Read Only Memory")
     }
 }
