@@ -20,6 +20,6 @@ class DrawInstruction(
         val asciiValue = registerX.readRegister()[0].toInt()
         require(asciiValue in 0..0x7F) { "ASCII value in registerX must be between 0x00 and 0x7F." }
 
-        display.draw(asciiValue.toByte(), row, col)
+        display.addToScreenBuffer(asciiValue.toByte(), row, col)
     }
 }

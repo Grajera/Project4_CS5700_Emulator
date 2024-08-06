@@ -1,7 +1,7 @@
 package Memory
 
 // Abstract class representing primary memory
-abstract class PrimaryMemory(
+abstract class PhysicalMemoryType(
     inputValues: ByteArray
 ) : Memory(inputValues) {
     abstract fun read(memoryLocation: Int): Byte

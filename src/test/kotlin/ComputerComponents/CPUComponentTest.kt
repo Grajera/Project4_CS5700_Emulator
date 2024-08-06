@@ -25,7 +25,7 @@ class CPUComponentTest {
     fun testPauseTimer() {
         // Start execution in a separate thread
         val executionThread = thread {
-            cpu.runBinaryFile(rom)
+            cpu.run(rom)
         }
 
         // Allow the CPU to run for a short time
@@ -52,7 +52,7 @@ class CPUComponentTest {
 
         // Start execution in a separate thread
         val executionThread = thread {
-            cpu.runBinaryFile(rom)
+            cpu.run(rom)
         }
 
         // Allow some time for execution to check if it shuts down

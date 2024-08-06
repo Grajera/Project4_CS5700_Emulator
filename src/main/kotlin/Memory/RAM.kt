@@ -5,7 +5,7 @@ object RamInstance {
 }
 
 // RAM class representing the primary memory
-class RAM : PrimaryMemory(ByteArray(4096)) { // 4096 bytes for RAM
+class RAM : PhysicalMemoryType(ByteArray(4096)) { // 4096 bytes for RAM
 
     // Reads a byte from the specified address
     override fun read(memoryLocation: Int): Byte = memoryValues[memoryLocation]

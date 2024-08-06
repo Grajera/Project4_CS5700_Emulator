@@ -3,47 +3,38 @@ package com.emulator
 import Memory.ROM
 import Memory.RomInstance
 import java.io.File
-import java.io.IOException
+import java.io.FileNotFoundException
 
+// Main emulator class for the D5700
 class D5700 {
 
-    private val cpu = CPU() // Initialize the CPU
-
-    fun run() {
+    // Starts the emulator
+    fun startExecution() {
         try {
-            cpu.runBinaryFile(loadBinary(readBinary(getFilePath())))
-        }
-         catch (e: Exception) {
+            // Load the binary file and run the CPU
+            CPU().run(loadFileIntoMemory(readFile()))
+        } catch (e: Exception) {
             println("An unexpected error occurred: ${e.message}")
-         }
+        }
     }
 
-    // Prompt the user for the path to the binary file
-    private fun getFilePath(): String {
+    // Reads the binary file after validating its existence and content
+    private fun readFile(): ByteArray {
         println("Path to .out file (Example: roms\\addition.out): ")
-        return readlnOrNull() ?: throw IOException("No path provided")
+        val path = readlnOrNull() ?: throw FileNotFoundException("No path provided")
+        val file = File(path)
+
+        // Check if the file exists and is not empty
+        require(file.exists()) { "File not found: $path" }
+        val binaryData = file.readBytes()
+        require(binaryData.isNotEmpty()) { "Binary file is empty" }
+
+        return binaryData.copyOf(4096) // Ensure memory size is 4096 bytes
     }
 
-    // Read the binary program from the given file path
-    private fun readBinary(path: String): ByteArray {
-        val file = File(path).apply {
-            // Check if the file exists
-            require(exists()) { "File not found: $path" }
-        }
-
-        return file.readBytes().also {
-            // Check if the file is empty
-            require(it.isNotEmpty()) { "Binary file is empty" }
-        }
-    }
-
-    // Convert the binary to a ROM object
-    private fun loadBinary(file: ByteArray): ROM {
-        // Ensure memory size is 4096 bytes
-        val memory = file.copyOf(4096)
-        // Initialize the ROM with the memory
-        RomInstance.initializeRom(memory)
-        // Get the ROM or throw an error
-        return RomInstance.getRom() ?: throw IOException("Failed to initialize ROM")
+    // Converts the binary data into a ROM object
+    private fun loadFileIntoMemory(file: ByteArray): ROM {
+        RomInstance.initializeRom(file) // Initialize ROM with memory
+        return RomInstance.getRom() ?: throw UninitializedPropertyAccessException("Failed to get instance of ROM")
     }
 }

@@ -76,7 +76,7 @@ class CPU(
     }
 
     // Start execution of the program with the provided ROM
-    fun runBinaryFile(rom: ROM) {
+    fun run(rom: ROM) {
         this.rom = rom
         try {
         executor.scheduleAtFixedRate(cpu, 0, 2L, TimeUnit.MILLISECONDS).get()

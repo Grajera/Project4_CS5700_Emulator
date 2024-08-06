@@ -15,7 +15,7 @@ object RomInstance {
 }
 
 // ROM class representing read-only memory
-class ROM(bytes: ByteArray) : PrimaryMemory(bytes) {
+class ROM(bytes: ByteArray) : PhysicalMemoryType(bytes) {
 
     // Reads a byte from the specified address in the ROM
     override fun read(memoryLocation: Int): Byte = memoryValues[memoryLocation]

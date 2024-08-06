@@ -1,5 +1,5 @@
 package com.emulator
 
 fun main() {
-    D5700().run()
+    D5700().startExecution()
 }
